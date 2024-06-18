@@ -94,7 +94,7 @@
           <item>
            <widget class="QLabel" name="assessment">
             <property name="text">
-             <string>Оценки в соответствии с баллами, %</string>
+             <string>Процентный порог для получения оценки</string>
             </property>
             <property name="alignment">
              <set>Qt::AlignCenter</set>
