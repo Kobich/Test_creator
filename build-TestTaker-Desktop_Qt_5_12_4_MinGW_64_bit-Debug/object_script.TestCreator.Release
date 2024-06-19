@@ -1,0 +1,10 @@
+release/main.o
+release/mainscreen.o
+release/mainwindow.o
+release/resultscreen.o
+release/testscreen.o
+release/qrc_qrc.o
+release/moc_mainscreen.o
+release/moc_mainwindow.o
+release/moc_resultscreen.o
+release/moc_testscreen.o

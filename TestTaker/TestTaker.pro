@@ -8,7 +8,7 @@ QT       += core gui sql
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-TARGET = TestCreator
+TARGET = TestTaker
 TEMPLATE = app
 
 # The following define makes your compiler emit warnings if you use
@@ -26,13 +26,22 @@ CONFIG += c++11
 
 SOURCES += \
         main.cpp \
-        mainwindow.cpp
+        main_screen.cpp \
+        mainwindow.cpp \
+        result_screen.cpp \
+        test_screen.cpp
 
 HEADERS += \
-        mainwindow.h
+        main_screen.h \
+        mainwindow.h \
+        result_screen.h \
+        test_screen.h
 
 FORMS += \
-        mainwindow.ui
+        main_screen.ui \
+        mainwindow.ui \
+        result_screen.ui \
+        test_screen.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

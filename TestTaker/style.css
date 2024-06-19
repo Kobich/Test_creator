@@ -1,0 +1,138 @@
+/* style.qss */
+
+/* Общие стили */
+QWidget {
+    font-family: Arial, sans-serif;
+    font-size: 18px;
+    color: #333;
+}
+
+/* Стили для QTextEdit */
+QTextEdit, AutoResizingTextEdit {
+    background-color: #fff;
+    border: 1px solid #1565c0; /* Темно-синий цвет границы */
+    padding: 5px;
+    border-radius: 5px;
+}
+
+/* Стили для QLabel */
+QLabel {
+    font-weight: bold;
+    color: #0d47a1; /* Темно-синий цвет текста */
+}
+
+/* Стили для QPushButton */
+QPushButton {
+    background-color: #0d47a1; /* Темно-синий цвет фона */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 18px;
+    margin: 4px 2px;
+    border-radius: 5px;
+}
+
+QPushButton:hover {
+    background-color: #0b3d91; /* Более темный синий цвет при наведении */
+}
+
+QPushButton:disabled {
+    background-color: #90caf9; /* Светло-синий цвет для отключенных кнопок */
+    color: #e3f2fd; /* Светло-голубой цвет текста для отключенных кнопок */
+}
+
+/* Стили для QRadioButton */
+QRadioButton {
+    margin: 5px;
+}
+
+/* Стили для QVBoxLayout и QGridLayout */
+QVBoxLayout, QGridLayout {
+    margin: 10px;
+    padding: 10px;
+}
+
+/* Стили для QMainWindow */
+QMainWindow {
+    border: 1px solid #1565c0; /* Темно-синий цвет границы */
+    border-radius: 10px;
+}
+
+/* Стили для QLineEdit */
+QLineEdit {
+    background-color: #fff;
+    border: 1px solid #1565c0; /* Темно-синий цвет границы */
+    padding: 5px;
+    border-radius: 5px;
+}
+
+/* Стили для QCheckBox */
+QCheckBox {
+    color: #0d47a1; /* Темно-синий цвет текста */
+    margin: 5px;
+}
+
+/* Стили для метки QCheckBox */
+QCheckBox::indicator {
+    width: 14px;
+    height: 14px;
+    border-radius: 3px; /* Закругленные углы */
+}
+
+QCheckBox::indicator:unchecked {
+    border: 1px solid #1565c0; /* Темно-синий цвет границы */
+    background-color: #fff; /* Белый фон */
+    border-radius: 3px; /* Закругленные углы */
+}
+
+QCheckBox::indicator:unchecked:hover {
+    border: 1px solid #0b3d91; /* Темно-синий цвет границы при наведении */
+    background-color: #e3f2fd; /* Светло-голубой цвет фона при наведении */
+}
+
+QCheckBox::indicator:unchecked:pressed {
+    border: 1px solid #0b3d91; /* Темно-синий цвет границы при нажатии */
+    background-color: #bbdefb; /* Более темный голубой цвет фона при нажатии */
+}
+
+QCheckBox::indicator:checked {
+    border: 1px solid #1565c0; /* Темно-синий цвет границы */
+    background-color: #0d47a1; /* Темно-синий цвет фона */
+    border-radius: 3px; /* Закругленные углы */
+}
+
+QCheckBox::indicator:checked:hover {
+    border: 1px solid #0b3d91; /* Темно-синий цвет границы при наведении */
+    background-color: #0b3d91; /* Темно-синий цвет фона при наведении */
+}
+
+QCheckBox::indicator:checked:pressed {
+    border: 1px solid #0b3d91; /* Темно-синий цвет границы при нажатии */
+    background-color: #064e8f; /* Более темный синий цвет фона при нажатии */
+}
+
+QCheckBox::indicator:indeterminate {
+    border: 1px solid #1565c0; /* Темно-синий цвет границы */
+    background-color: #0d47a1; /* Темно-синий цвет фона */
+    border-radius: 3px; /* Закругленные углы */
+}
+
+QCheckBox::indicator:indeterminate:hover {
+    border: 1px solid #0b3d91; /* Темно-синий цвет границы при наведении */
+    background-color: #0b3d91; /* Темно-синий цвет фона при наведении */
+}
+
+QCheckBox::indicator:indeterminate:pressed {
+    border: 1px solid #0b3d91; /* Темно-синий цвет границы при нажатии */
+    background-color: #064e8f; /* Более темный синий цвет фона при нажатии */
+}
+
+
+QComboBox {
+    background-color: #fff;
+    border: 1px solid #1565c0; /* Темно-синий цвет границы */
+    padding: 5px;
+    border-radius: 5px;
+}
