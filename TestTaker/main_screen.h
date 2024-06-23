@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include <QSqlDatabase>
+#include <QPushButton>
 
 namespace Ui {
 class Main_screen;
@@ -15,6 +16,9 @@ class Main_screen : public QWidget
 public:
     explicit Main_screen(QWidget *parent = nullptr);
     ~Main_screen();
+
+signals:
+    void startTestClicked(int timeTest, const QSqlDatabase &db);
 
 private slots:
     void chooseTestButtonClicked();
@@ -30,6 +34,9 @@ private:
     int scoreGood;
     int scoreExcellent;
     int timeTest;
+    QString dbPath;
+
+    QPushButton *startTestButton; // указатель на кнопку
 };
 
 #endif // MAIN_SCREEN_H

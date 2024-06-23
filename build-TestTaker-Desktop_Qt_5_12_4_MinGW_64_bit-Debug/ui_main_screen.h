@@ -219,6 +219,7 @@ public:
         timeOfTest_2->setLayoutDirection(Qt::LeftToRight);
         timeOfTest_2->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
         timeOfTest_2->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+        timeOfTest_2->setSizeAdjustPolicy(QAbstractScrollArea::AdjustIgnored);
         timeOfTest_2->setReadOnly(false);
         timeOfTest_2->setTextInteractionFlags(Qt::TextEditable);
 

@@ -10,7 +10,8 @@ namespace Ui {
 class MainWindow;
 }
 
-class MainWindow : public QMainWindow {
+class MainWindow : public QMainWindow
+{
     Q_OBJECT
 
 public:
@@ -18,7 +19,7 @@ public:
     ~MainWindow();
 
 private slots:
-    void startTest();
+    void startTest(int timeTest, const QSqlDatabase &db);
     void showResults();
 
 private:

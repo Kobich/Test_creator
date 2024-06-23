@@ -9,7 +9,8 @@
 
 Main_screen::Main_screen(QWidget *parent) :
     QWidget(parent),
-    ui(new Ui::Main_screen)
+    ui(new Ui::Main_screen),
+    startTestButton(nullptr) // инициализация указателя
 {
     ui->setupUi(this);
     connect(ui->chooseTestButton, &QPushButton::clicked, this, &Main_screen::chooseTestButtonClicked);
@@ -17,7 +18,7 @@ Main_screen::Main_screen(QWidget *parent) :
 
 Main_screen::~Main_screen()
 {
-    db.close(); // Закрыть базу данных при уничтожении объекта
+    db.close();
     delete ui;
 }
 
@@ -51,10 +52,12 @@ bool Main_screen::openDatabase(const QString &fileName)
             ui->textEditFor5_2->setText(QString::number(scoreExcellent));
             ui->timeOfTest_2->setText(QString::number(timeTest));
 
-            QPushButton *startTestButton = new QPushButton("Начать тестирование", this);
-            ui->gridLayout->addWidget(startTestButton);
-
-            connect(startTestButton, &QPushButton::clicked, this, &Main_screen::startTestButtonClicked);
+            // Проверяем, существует ли кнопка, и если нет, создаем её
+            if (!startTestButton) {
+                startTestButton = new QPushButton("Начать тестирование", this);
+                ui->gridLayout->addWidget(startTestButton);
+                connect(startTestButton, &QPushButton::clicked, this, &Main_screen::startTestButtonClicked);
+            }
         } else {
             qDebug() << "Данные оценок и времени теста не найдены";
             return false;
@@ -160,7 +163,5 @@ void Main_screen::chooseTestButtonClicked()
 
 void Main_screen::startTestButtonClicked()
 {
-    Test_screen *testScreen = new Test_screen(this);
-    testScreen->show();
-    this->hide();
+    emit startTestClicked(timeTest, db);
 }

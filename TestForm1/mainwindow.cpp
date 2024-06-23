@@ -710,9 +710,6 @@ int score = questionQuery.value(2).toInt(); // Считывание баллов
 
         newQuestion.answers.append(newAnswer);
 
-        //newGridLayout->addWidget(checkBox, 4 + answerCounter - 1, 0, 1, 1);
-        //newGridLayout->addWidget(answerTextEdit, 4 + answerCounter - 1, 1, 1, 2);
-
         QHBoxLayout *answerLayout = new QHBoxLayout();
                     answerLayout->addWidget(checkBox);
                     answerLayout->addWidget(answerTextEdit);

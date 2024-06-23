@@ -11,6 +11,10 @@
 
 #include <QtCore/QVariant>
 #include <QtWidgets/QApplication>
+#include <QtWidgets/QGridLayout>
+#include <QtWidgets/QLabel>
+#include <QtWidgets/QScrollArea>
+#include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QWidget>
 
 QT_BEGIN_NAMESPACE
@@ -18,12 +22,48 @@ QT_BEGIN_NAMESPACE
 class Ui_Test_screen
 {
 public:
+    QGridLayout *gridLayout;
+    QLabel *timerLabel;
+    QScrollArea *scrollArea;
+    QWidget *scrollAreaWidgetContents;
+    QGridLayout *gridLayout_2;
+    QVBoxLayout *verticalLayout;
 
     void setupUi(QWidget *Test_screen)
     {
         if (Test_screen->objectName().isEmpty())
             Test_screen->setObjectName(QString::fromUtf8("Test_screen"));
-        Test_screen->resize(400, 300);
+        Test_screen->resize(835, 518);
+        gridLayout = new QGridLayout(Test_screen);
+        gridLayout->setObjectName(QString::fromUtf8("gridLayout"));
+        gridLayout->setContentsMargins(-1, 9, -1, 0);
+        timerLabel = new QLabel(Test_screen);
+        timerLabel->setObjectName(QString::fromUtf8("timerLabel"));
+        timerLabel->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
+
+        gridLayout->addWidget(timerLabel, 0, 0, 1, 1);
+
+        scrollArea = new QScrollArea(Test_screen);
+        scrollArea->setObjectName(QString::fromUtf8("scrollArea"));
+        scrollArea->setFrameShape(QFrame::NoFrame);
+        scrollArea->setWidgetResizable(true);
+        scrollAreaWidgetContents = new QWidget();
+        scrollAreaWidgetContents->setObjectName(QString::fromUtf8("scrollAreaWidgetContents"));
+        scrollAreaWidgetContents->setGeometry(QRect(0, 0, 817, 490));
+        gridLayout_2 = new QGridLayout(scrollAreaWidgetContents);
+        gridLayout_2->setObjectName(QString::fromUtf8("gridLayout_2"));
+        gridLayout_2->setSizeConstraint(QLayout::SetMinAndMaxSize);
+        verticalLayout = new QVBoxLayout();
+        verticalLayout->setObjectName(QString::fromUtf8("verticalLayout"));
+        verticalLayout->setSizeConstraint(QLayout::SetMinAndMaxSize);
+        verticalLayout->setContentsMargins(-1, -1, -1, 9);
+
+        gridLayout_2->addLayout(verticalLayout, 0, 0, 1, 1);
+
+        scrollArea->setWidget(scrollAreaWidgetContents);
+
+        gridLayout->addWidget(scrollArea, 1, 0, 1, 1);
+
 
         retranslateUi(Test_screen);
 
@@ -33,6 +73,7 @@ public:
     void retranslateUi(QWidget *Test_screen)
     {
         Test_screen->setWindowTitle(QApplication::translate("Test_screen", "Form", nullptr));
+        timerLabel->setText(QApplication::translate("Test_screen", "TextLabel", nullptr));
     } // retranslateUi
 
 };
