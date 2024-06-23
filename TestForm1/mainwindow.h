@@ -36,6 +36,28 @@ private slots:
     }
 };
 
+class CustomAutoResizingTextEdit : public QTextEdit {
+    Q_OBJECT
+public:
+    CustomAutoResizingTextEdit(QWidget *parent = nullptr) : QTextEdit(parent) {
+        setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Minimum);
+        connect(this, &QTextEdit::textChanged, this, &CustomAutoResizingTextEdit::adjustHeight);
+    }
+protected:
+    void resizeEvent(QResizeEvent *event) override {
+        QTextEdit::resizeEvent(event); // Вызываем реализацию базового класса
+
+        // При изменении размера виджета также корректируем его высоту
+        adjustHeight();
+    }
+private slots:
+    void adjustHeight() {
+        document()->setTextWidth(width());
+        QSize newSize(document()->size().toSize());
+        setMinimumHeight(newSize.height() + 10);
+    }
+};
+
 
 namespace Ui {
 class MainWindow;
@@ -50,7 +72,7 @@ struct OpenQuestionWidget {
 
 struct AnswerWidget {
     QCheckBox *checkBox;
-    AutoResizingTextEdit *textEdit; // Используем AutoResizingTextEdit вместо QTextEdit
+    CustomAutoResizingTextEdit *textEdit; // Используем AutoResizingTextEdit вместо QTextEdit
 };
 
 struct QuestionWidget {

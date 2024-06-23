@@ -134,103 +134,124 @@ void Test_screen::shuffleQuestions() {
 }
 
 void Test_screen::loadQuestionsFromDatabase() {
+    QList<QPair<int, bool>> questionTypes; // Pair of (question id, 0 for normal question, 1 for open question)
     for (const Question &question : shuffledQuestions) {
-        QWidget *newWidget = new QWidget();
-        QGridLayout *newGridLayout = new QGridLayout(newWidget);
-
-        QLabel *questionLabel = new QLabel(QString("Вопрос %1").arg(question.id));
-        AutoResizingTextEdit *textEdit = new AutoResizingTextEdit();
-        textEdit->setObjectName(QString("questionText_%1").arg(question.id));
-        textEdit->setHtml(question.question_text);
-        textEdit->setTextInteractionFlags(Qt::NoTextInteraction);
-        textEdit->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-
-
-        QuestionWidget newQuestionWidget;
-        newQuestionWidget.textEdit = textEdit;
-
-        newGridLayout->addWidget(questionLabel, 0, 0, 1, 2);
-        newGridLayout->addWidget(textEdit, 1, 0, 1, 3);
-
-        // Добавляем поле для ввода баллов
-        QLabel *scoreLabel = new QLabel("Баллы:");
-        QLabel *scoreLineEdit = new QLabel();
-        scoreLineEdit->setText(QString::number(question.score));
-        scoreLineEdit->setMaximumWidth(30);
-
-        QHBoxLayout *scoreLayout = new QHBoxLayout();
-        scoreLayout->addWidget(scoreLabel);
-        scoreLayout->addWidget(scoreLineEdit);
-
-        newGridLayout->addLayout(scoreLayout, 0, 0, 1, 3, Qt::AlignRight);
-
-        int answerCounter = 1;
-        for (const Answer &answer : question.answers) {
-            QCheckBox *checkBox = new QCheckBox();
-            CustomAutoResizingTextEdit *answerTextLabel = new CustomAutoResizingTextEdit();
-            answerTextLabel->setObjectName(QString("answerText_%1_%2").arg(question.id).arg(answerCounter));
-            answerTextLabel->setText(answer.answer_text);
-
-            // Установка минимальной высоты для текстового поля
-            answerTextLabel->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-            answerTextLabel->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-            answerTextLabel->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-            answerTextLabel->setReadOnly(true); // Опционально: чтобы текст был только для чтения
-
-            AnswerWidget newAnswerWidget;
-            newAnswerWidget.checkBox = checkBox;
-            newAnswerWidget.textLabel = answerTextLabel;
-
-            newQuestionWidget.answers.append(newAnswerWidget);
-
-            QHBoxLayout *answerLayout = new QHBoxLayout();
-            answerLayout->addWidget(checkBox);
-            answerLayout->addWidget(answerTextLabel);
-
-            newGridLayout->addLayout(answerLayout, 4 + answerCounter - 1, 0, 1, 3);
-            answerCounter++;
-        }
-
-        newGridLayout->setColumnStretch(1, 1);
-        newWidget->setLayout(newGridLayout);
-        newWidget->setContentsMargins(0, 0, 0, 40);
-
-        ui->verticalLayout->addWidget(newWidget);
-
-        newQuestionWidget.scoreLineEdit = nullptr;
-        questionWidgets.append(newQuestionWidget);
-        questionCheckBoxes[question.id] = QList<QCheckBox*>();
-        for (const AnswerWidget &answerWidget : newQuestionWidget.answers) {
-            questionCheckBoxes[question.id].append(answerWidget.checkBox);
-        }
+        questionTypes.append(qMakePair(question.id, false));
+    }
+    for (const OpenQuestion &openQuestion : shuffledOpenQuestions) {
+        questionTypes.append(qMakePair(openQuestion.id, true));
     }
 
-    for (const OpenQuestion &openQuestion : shuffledOpenQuestions) {
-        QWidget *newWidget = new QWidget();
-        QGridLayout *newGridLayout = new QGridLayout(newWidget);
+    // Shuffle question types
+    std::random_device rd;
+    std::mt19937 g(rd());
+    std::shuffle(questionTypes.begin(), questionTypes.end(), g);
 
-        QLabel *questionLabel = new QLabel(QString("Открытый вопрос %1").arg(openQuestion.id));
-        AutoResizingTextEdit *textEdit = new AutoResizingTextEdit();
-        textEdit->setObjectName(QString("openQuestionText_%1").arg(openQuestion.id));
-        textEdit->setHtml(openQuestion.question_text);
-        textEdit->setTextInteractionFlags(Qt::NoTextInteraction);
-        textEdit->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    for (const auto &questionType : questionTypes) {
+        if (questionType.second) {
+            // Open question
+            const OpenQuestion &openQuestion = std::find_if(shuffledOpenQuestions.begin(), shuffledOpenQuestions.end(),
+                [&questionType](const OpenQuestion &q) { return q.id == questionType.first; }).operator*();
 
-        newGridLayout->addWidget(questionLabel, 0, 0, 1, 2);
-        newGridLayout->addWidget(textEdit, 1, 0, 1, 3);
+            QWidget *newWidget = new QWidget();
+            QGridLayout *newGridLayout = new QGridLayout(newWidget);
 
-        QLineEdit *answerLineEdit = new QLineEdit();
-        answerLineEdit->setObjectName(QString("openQuestionAnswer_%1").arg(openQuestion.id));
+            QLabel *questionLabel = new QLabel(QString("Открытый вопрос %1").arg(openQuestion.id));
+            AutoResizingTextEdit *textEdit = new AutoResizingTextEdit();
+            textEdit->setObjectName(QString("openQuestionText_%1").arg(openQuestion.id));
+            textEdit->setHtml(openQuestion.question_text);
+            textEdit->setTextInteractionFlags(Qt::NoTextInteraction);
+            textEdit->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
-        newGridLayout->addWidget(answerLineEdit, 2, 0, 1, 3);
+            newGridLayout->addWidget(questionLabel, 0, 0, 1, 2);
+            newGridLayout->addWidget(textEdit, 1, 0, 1, 3);
 
-        newGridLayout->setColumnStretch(1, 1);
-        newWidget->setLayout(newGridLayout);
-        newWidget->setContentsMargins(0, 0, 0, 40);
+            QLineEdit *answerLineEdit = new QLineEdit();
+            answerLineEdit->setObjectName(QString("openQuestionAnswer_%1").arg(openQuestion.id));
 
-        ui->verticalLayout->addWidget(newWidget);
+            newGridLayout->addWidget(answerLineEdit, 2, 0, 1, 3);
 
-        openQuestionLineEdits[openQuestion.id] = answerLineEdit;
+            newGridLayout->setColumnStretch(1, 1);
+            newWidget->setLayout(newGridLayout);
+            newWidget->setContentsMargins(0, 0, 0, 40);
+
+            ui->verticalLayout->addWidget(newWidget);
+
+            openQuestionLineEdits[openQuestion.id] = answerLineEdit;
+        } else {
+            // Normal question
+            const Question &question = std::find_if(shuffledQuestions.begin(), shuffledQuestions.end(),
+                [&questionType](const Question &q) { return q.id == questionType.first; }).operator*();
+
+            QWidget *newWidget = new QWidget();
+            QGridLayout *newGridLayout = new QGridLayout(newWidget);
+
+            QLabel *questionLabel = new QLabel(QString("Вопрос %1").arg(question.id));
+            AutoResizingTextEdit *textEdit = new AutoResizingTextEdit();
+            textEdit->setObjectName(QString("questionText_%1").arg(question.id));
+            textEdit->setHtml(question.question_text);
+            textEdit->setTextInteractionFlags(Qt::NoTextInteraction);
+            textEdit->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+
+            newGridLayout->addWidget(questionLabel, 0, 0, 1, 2);
+            newGridLayout->addWidget(textEdit, 1, 0, 1, 3);
+
+            // Добавляем поле для ввода баллов
+            QLabel *scoreLabel = new QLabel("Баллы:");
+            QLabel *scoreLineEdit = new QLabel();
+            scoreLineEdit->setText(QString::number(question.score));
+            scoreLineEdit->setMaximumWidth(30);
+
+            QHBoxLayout *scoreLayout = new QHBoxLayout();
+            scoreLayout->addWidget(scoreLabel);
+            scoreLayout->addWidget(scoreLineEdit);
+
+            newGridLayout->addLayout(scoreLayout, 0, 0, 1, 3, Qt::AlignRight);
+
+            int answerCounter = 1;
+            for (const Answer &answer : question.answers) {
+                QCheckBox *checkBox = new QCheckBox();
+                CustomAutoResizingTextEdit *answerTextLabel = new CustomAutoResizingTextEdit();
+                answerTextLabel->setObjectName(QString("answerText_%1_%2").arg(question.id).arg(answerCounter));
+                answerTextLabel->setText(answer.answer_text);
+
+                // Установка минимальной высоты для текстового поля
+                answerTextLabel->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+                answerTextLabel->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+                answerTextLabel->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+                answerTextLabel->setReadOnly(true); // Опционально: чтобы текст был только для чтения
+
+                AnswerWidget newAnswerWidget;
+                newAnswerWidget.checkBox = checkBox;
+                newAnswerWidget.textLabel = answerTextLabel;
+
+                QHBoxLayout *answerLayout = new QHBoxLayout();
+                answerLayout->addWidget(checkBox);
+                answerLayout->addWidget(answerTextLabel);
+
+                newGridLayout->addLayout(answerLayout, 4 + answerCounter - 1, 0, 1, 3);
+                answerCounter++;
+            }
+
+            newGridLayout->setColumnStretch(1, 1);
+            newWidget->setLayout(newGridLayout);
+            newWidget->setContentsMargins(0, 0, 0, 40);
+
+            ui->verticalLayout->addWidget(newWidget);
+
+            // Добавляем виджет в список виджетов вопросов
+            QuestionWidget newQuestionWidget;
+            newQuestionWidget.textEdit = textEdit;
+            newQuestionWidget.answers = QList<AnswerWidget>();
+            newQuestionWidget.scoreLineEdit = scoreLineEdit;
+            questionWidgets.append(newQuestionWidget);
+
+            // Добавляем чекбоксы в QMap для дальнейшей проверки ответов
+            questionCheckBoxes[question.id] = QList<QCheckBox*>();
+            for (const AnswerWidget &answerWidget : newQuestionWidget.answers) {
+                questionCheckBoxes[question.id].append(answerWidget.checkBox);
+            }
+        }
     }
 }
 

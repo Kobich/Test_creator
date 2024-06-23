@@ -15,7 +15,7 @@ CC            = gcc
 CXX           = g++
 DEFINES       = -DUNICODE -D_UNICODE -DWIN32 -DMINGW_HAS_SECURE_API=1 -DQT_DEPRECATED_WARNINGS -DQT_QML_DEBUG -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_SQL_LIB -DQT_CORE_LIB -DQT_NEEDS_QMAIN
 CFLAGS        = -fno-keep-inline-dllexport -O2 -Wall -W -Wextra $(DEFINES)
-CXXFLAGS      = -fno-keep-inline-dllexport -O2 -std=gnu++11 -Wall -W -Wextra -fexceptions -mthreads $(DEFINES)
+CXXFLAGS      = -fno-keep-inline-dllexport -O2 -std=gnu++1z -Wall -W -Wextra -fexceptions -mthreads $(DEFINES)
 INCPATH       = -I..\TestTaker -I. -I..\..\..\Qt\Qt5.12.4\5.12.4\mingw73_64\include -I..\..\..\Qt\Qt5.12.4\5.12.4\mingw73_64\include\QtWidgets -I..\..\..\Qt\Qt5.12.4\5.12.4\mingw73_64\include\QtGui -I..\..\..\Qt\Qt5.12.4\5.12.4\mingw73_64\include\QtANGLE -I..\..\..\Qt\Qt5.12.4\5.12.4\mingw73_64\include\QtSql -I..\..\..\Qt\Qt5.12.4\5.12.4\mingw73_64\include\QtCore -Irelease -I. -I\include -I..\..\..\Qt\Qt5.12.4\5.12.4\mingw73_64\mkspecs\win32-g++ 
 LINKER      =        g++
 LFLAGS        =        -Wl,-s -Wl,-subsystem,windows -mthreads
@@ -127,7 +127,7 @@ compiler_moc_predefs_make_all: release/moc_predefs.h
 compiler_moc_predefs_clean:
 	-$(DEL_FILE) release\moc_predefs.h
 release/moc_predefs.h: ../../../Qt/Qt5.12.4/5.12.4/mingw73_64/mkspecs/features/data/dummy.cpp
-	g++ -fno-keep-inline-dllexport -O2 -std=gnu++11 -Wall -W -Wextra -dM -E -o release\moc_predefs.h ..\..\..\Qt\Qt5.12.4\5.12.4\mingw73_64\mkspecs\features\data\dummy.cpp
+	g++ -fno-keep-inline-dllexport -O2 -std=gnu++1z -Wall -W -Wextra -dM -E -o release\moc_predefs.h ..\..\..\Qt\Qt5.12.4\5.12.4\mingw73_64\mkspecs\features\data\dummy.cpp
 
 compiler_moc_header_make_all: release/moc_main_screen.cpp release/moc_mainwindow.cpp release/moc_result_screen.cpp release/moc_test_screen.cpp
 compiler_moc_header_clean:
@@ -368,6 +368,28 @@ release/moc_mainwindow.cpp: ../TestTaker/mainwindow.h \
 		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtCore/QTimer \
 		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtCore/qtimer.h \
 		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtCore/qbasictimer.h \
+		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtWidgets/QVBoxLayout \
+		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtWidgets/qboxlayout.h \
+		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtWidgets/qlayout.h \
+		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtWidgets/qlayoutitem.h \
+		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtWidgets/qgridlayout.h \
+		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtWidgets/QGridLayout \
+		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtWidgets/QCheckBox \
+		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtWidgets/qcheckbox.h \
+		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtWidgets/QLabel \
+		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtWidgets/qlabel.h \
+		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtWidgets/qframe.h \
+		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtCore/QMap \
+		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtWidgets/QLineEdit \
+		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtWidgets/qlineedit.h \
+		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtGui/qtextcursor.h \
+		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtGui/qtextformat.h \
+		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtGui/qpen.h \
+		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtGui/qtextoption.h \
+		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtWidgets/QTextEdit \
+		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtWidgets/qtextedit.h \
+		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtWidgets/qabstractscrollarea.h \
+		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtGui/qtextdocument.h \
 		../TestTaker/result_screen.h \
 		release/moc_predefs.h \
 		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/bin/moc.exe
@@ -592,6 +614,30 @@ release/moc_test_screen.cpp: ../TestTaker/test_screen.h \
 		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtCore/QTimer \
 		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtCore/qtimer.h \
 		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtCore/qbasictimer.h \
+		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtWidgets/QVBoxLayout \
+		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtWidgets/qboxlayout.h \
+		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtWidgets/qlayout.h \
+		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtWidgets/qlayoutitem.h \
+		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtWidgets/qgridlayout.h \
+		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtWidgets/QGridLayout \
+		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtWidgets/QCheckBox \
+		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtWidgets/qcheckbox.h \
+		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtWidgets/qabstractbutton.h \
+		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtGui/qicon.h \
+		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtWidgets/QLabel \
+		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtWidgets/qlabel.h \
+		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtWidgets/qframe.h \
+		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtCore/QMap \
+		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtWidgets/QLineEdit \
+		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtWidgets/qlineedit.h \
+		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtGui/qtextcursor.h \
+		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtGui/qtextformat.h \
+		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtGui/qpen.h \
+		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtGui/qtextoption.h \
+		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtWidgets/QTextEdit \
+		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtWidgets/qtextedit.h \
+		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtWidgets/qabstractscrollarea.h \
+		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtGui/qtextdocument.h \
 		release/moc_predefs.h \
 		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/bin/moc.exe
 	C:\Qt\Qt5.12.4\5.12.4\mingw73_64\bin\moc.exe $(DEFINES) --include C:/TestForm/Test_creator/build-TestTaker-Desktop_Qt_5_12_4_MinGW_64_bit-Debug/release/moc_predefs.h -IC:/Qt/Qt5.12.4/5.12.4/mingw73_64/mkspecs/win32-g++ -IC:/TestForm/Test_creator/TestTaker -IC:/Qt/Qt5.12.4/5.12.4/mingw73_64/include -IC:/Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtWidgets -IC:/Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtGui -IC:/Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtANGLE -IC:/Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtSql -IC:/Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtCore -I. -IC:/Qt/Qt5.12.4/Tools/mingw730_64/lib/gcc/x86_64-w64-mingw32/7.3.0/include/c++ -IC:/Qt/Qt5.12.4/Tools/mingw730_64/lib/gcc/x86_64-w64-mingw32/7.3.0/include/c++/x86_64-w64-mingw32 -IC:/Qt/Qt5.12.4/Tools/mingw730_64/lib/gcc/x86_64-w64-mingw32/7.3.0/include/c++/backward -IC:/Qt/Qt5.12.4/Tools/mingw730_64/lib/gcc/x86_64-w64-mingw32/7.3.0/include -IC:/Qt/Qt5.12.4/Tools/mingw730_64/lib/gcc/x86_64-w64-mingw32/7.3.0/include-fixed -IC:/Qt/Qt5.12.4/Tools/mingw730_64/x86_64-w64-mingw32/include ..\TestTaker\test_screen.h -o release\moc_test_screen.cpp
@@ -751,6 +797,28 @@ release/main.o: ../TestTaker/main.cpp ../TestTaker/mainwindow.h \
 		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtCore/QTimer \
 		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtCore/qtimer.h \
 		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtCore/qbasictimer.h \
+		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtWidgets/QVBoxLayout \
+		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtWidgets/qboxlayout.h \
+		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtWidgets/qlayout.h \
+		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtWidgets/qlayoutitem.h \
+		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtWidgets/qgridlayout.h \
+		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtWidgets/QGridLayout \
+		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtWidgets/QCheckBox \
+		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtWidgets/qcheckbox.h \
+		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtWidgets/QLabel \
+		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtWidgets/qlabel.h \
+		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtWidgets/qframe.h \
+		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtCore/QMap \
+		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtWidgets/QLineEdit \
+		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtWidgets/qlineedit.h \
+		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtGui/qtextcursor.h \
+		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtGui/qtextformat.h \
+		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtGui/qpen.h \
+		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtGui/qtextoption.h \
+		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtWidgets/QTextEdit \
+		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtWidgets/qtextedit.h \
+		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtWidgets/qabstractscrollarea.h \
+		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtGui/qtextdocument.h \
 		../TestTaker/result_screen.h \
 		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtWidgets/QApplication \
 		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtWidgets/qapplication.h \
@@ -920,7 +988,12 @@ release/main_screen.o: ../TestTaker/main_screen.cpp ../TestTaker/main_screen.h \
 		../TestTaker/test_screen.h \
 		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtCore/QTimer \
 		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtCore/qtimer.h \
-		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtCore/qbasictimer.h
+		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtCore/qbasictimer.h \
+		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtWidgets/QCheckBox \
+		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtWidgets/qcheckbox.h \
+		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtCore/QMap \
+		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtWidgets/QLineEdit \
+		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtWidgets/qlineedit.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o release\main_screen.o ..\TestTaker\main_screen.cpp
 
 release/mainwindow.o: ../TestTaker/mainwindow.cpp ../TestTaker/mainwindow.h \
@@ -1043,6 +1116,28 @@ release/mainwindow.o: ../TestTaker/mainwindow.cpp ../TestTaker/mainwindow.h \
 		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtCore/QTimer \
 		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtCore/qtimer.h \
 		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtCore/qbasictimer.h \
+		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtWidgets/QVBoxLayout \
+		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtWidgets/qboxlayout.h \
+		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtWidgets/qlayout.h \
+		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtWidgets/qlayoutitem.h \
+		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtWidgets/qgridlayout.h \
+		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtWidgets/QGridLayout \
+		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtWidgets/QCheckBox \
+		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtWidgets/qcheckbox.h \
+		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtWidgets/QLabel \
+		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtWidgets/qlabel.h \
+		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtWidgets/qframe.h \
+		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtCore/QMap \
+		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtWidgets/QLineEdit \
+		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtWidgets/qlineedit.h \
+		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtGui/qtextcursor.h \
+		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtGui/qtextformat.h \
+		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtGui/qpen.h \
+		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtGui/qtextoption.h \
+		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtWidgets/QTextEdit \
+		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtWidgets/qtextedit.h \
+		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtWidgets/qabstractscrollarea.h \
+		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtGui/qtextdocument.h \
 		../TestTaker/result_screen.h \
 		ui_mainwindow.h \
 		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtCore/QVariant \
@@ -1176,7 +1271,21 @@ release/result_screen.o: ../TestTaker/result_screen.cpp ../TestTaker/result_scre
 		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtCore/qeventloop.h \
 		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtWidgets/qdesktopwidget.h \
 		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtGui/qguiapplication.h \
-		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtGui/qinputmethod.h
+		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtGui/qinputmethod.h \
+		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtWidgets/QHBoxLayout \
+		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtWidgets/qboxlayout.h \
+		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtWidgets/qlayout.h \
+		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtWidgets/qlayoutitem.h \
+		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtWidgets/qgridlayout.h \
+		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtWidgets/QTextEdit \
+		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtWidgets/qtextedit.h \
+		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtWidgets/qabstractscrollarea.h \
+		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtWidgets/qframe.h \
+		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtGui/qtextdocument.h \
+		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtGui/qtextoption.h \
+		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtGui/qtextcursor.h \
+		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtGui/qtextformat.h \
+		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtGui/qpen.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o release\result_screen.o ..\TestTaker\result_screen.cpp
 
 release/test_screen.o: ../TestTaker/test_screen.cpp ../TestTaker/test_screen.h \
@@ -1290,6 +1399,30 @@ release/test_screen.o: ../TestTaker/test_screen.cpp ../TestTaker/test_screen.h \
 		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtCore/QTimer \
 		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtCore/qtimer.h \
 		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtCore/qbasictimer.h \
+		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtWidgets/QVBoxLayout \
+		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtWidgets/qboxlayout.h \
+		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtWidgets/qlayout.h \
+		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtWidgets/qlayoutitem.h \
+		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtWidgets/qgridlayout.h \
+		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtWidgets/QGridLayout \
+		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtWidgets/QCheckBox \
+		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtWidgets/qcheckbox.h \
+		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtWidgets/qabstractbutton.h \
+		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtGui/qicon.h \
+		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtWidgets/QLabel \
+		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtWidgets/qlabel.h \
+		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtWidgets/qframe.h \
+		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtCore/QMap \
+		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtWidgets/QLineEdit \
+		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtWidgets/qlineedit.h \
+		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtGui/qtextcursor.h \
+		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtGui/qtextformat.h \
+		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtGui/qpen.h \
+		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtGui/qtextoption.h \
+		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtWidgets/QTextEdit \
+		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtWidgets/qtextedit.h \
+		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtWidgets/qabstractscrollarea.h \
+		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtGui/qtextdocument.h \
 		ui_test_screen.h \
 		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtCore/QVariant \
 		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtWidgets/QApplication \
@@ -1299,35 +1432,15 @@ release/test_screen.o: ../TestTaker/test_screen.cpp ../TestTaker/test_screen.h \
 		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtWidgets/qdesktopwidget.h \
 		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtGui/qguiapplication.h \
 		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtGui/qinputmethod.h \
-		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtWidgets/QGridLayout \
-		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtWidgets/qgridlayout.h \
-		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtWidgets/qlayout.h \
-		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtWidgets/qlayoutitem.h \
-		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtWidgets/qboxlayout.h \
-		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtWidgets/QLabel \
-		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtWidgets/qlabel.h \
-		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtWidgets/qframe.h \
 		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtWidgets/QScrollArea \
 		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtWidgets/qscrollarea.h \
-		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtWidgets/qabstractscrollarea.h \
-		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtWidgets/QVBoxLayout \
 		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtSql/QSqlQuery \
 		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtSql/qsqlquery.h \
-		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtWidgets/QCheckBox \
-		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtWidgets/qcheckbox.h \
-		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtWidgets/qabstractbutton.h \
-		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtGui/qicon.h \
 		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtSql/QSqlRecord \
 		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtSql/qsqlrecord.h \
 		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtSql/QSqlError \
 		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtSql/qsqlerror.h \
-		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtCore/QDebug \
-		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtWidgets/QLineEdit \
-		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtWidgets/qlineedit.h \
-		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtGui/qtextcursor.h \
-		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtGui/qtextformat.h \
-		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtGui/qpen.h \
-		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtGui/qtextoption.h
+		../../../Qt/Qt5.12.4/5.12.4/mingw73_64/include/QtCore/QDebug
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o release\test_screen.o ..\TestTaker\test_screen.cpp
 
 release/qrc_qrc.o: release/qrc_qrc.cpp 

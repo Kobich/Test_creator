@@ -88,7 +88,7 @@ void MainWindow::addAnswerButton() {
 
     AnswerWidget answerWidget;
     answerWidget.checkBox = new QCheckBox();
-    answerWidget.textEdit = new AutoResizingTextEdit();
+    answerWidget.textEdit = new CustomAutoResizingTextEdit();
 
     QWidget *parentWidget = clickedButton->parentWidget();
     QGridLayout *gridLayoutParent = qobject_cast<QGridLayout*>(parentWidget->layout());
@@ -98,6 +98,9 @@ void MainWindow::addAnswerButton() {
         QHBoxLayout *answerLayout = new QHBoxLayout();
         answerLayout->addWidget(answerWidget.checkBox);
         answerLayout->addWidget(answerWidget.textEdit);
+        answerWidget.textEdit->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+        answerWidget.textEdit->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+        answerWidget.textEdit->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
         QPushButton *deleteAnswerButton = new QPushButton("Удалить");
         connect(deleteAnswerButton, &QPushButton::clicked, [this, answerLayout, parentWidget, row]() {
@@ -700,9 +703,12 @@ int score = questionQuery.value(2).toInt(); // Считывание баллов
 
         QCheckBox *checkBox = new QCheckBox();
         checkBox->setChecked(isCorrect);
-        AutoResizingTextEdit *answerTextEdit = new AutoResizingTextEdit();
+        CustomAutoResizingTextEdit *answerTextEdit = new CustomAutoResizingTextEdit();
         answerTextEdit->setObjectName(QString("answerText_%1_%2").arg(questionId).arg(answerCounter));
         answerTextEdit->setText(answerText);
+        answerTextEdit->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+        answerTextEdit->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+        answerTextEdit->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
         AnswerWidget newAnswer;
         newAnswer.checkBox = checkBox;
