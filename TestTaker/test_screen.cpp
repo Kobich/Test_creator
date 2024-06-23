@@ -15,7 +15,7 @@
 Test_screen::Test_screen(const QSqlDatabase &db, QWidget *parent, int timeTest) :
     QWidget(parent),
     ui(new Ui::Test_screen),
-    timeRemaining(timeTest)
+    timeRemaining(timeTest* 60)
 {
     ui->setupUi(this);
 
@@ -34,11 +34,34 @@ Test_screen::Test_screen(const QSqlDatabase &db, QWidget *parent, int timeTest) 
 
     // Выводим перемешанные вопросы
     printShuffledQuestions();
+
+    timer = new QTimer(this);
+    connect(timer, &QTimer::timeout, this, &Test_screen::updateTimer);
+    timer->start(1000);
 }
 
 Test_screen::~Test_screen()
 {
     delete ui;
+}
+
+void Test_screen::updateTimer() {
+    if (timeRemaining > 0) {
+        timeRemaining--;
+
+        int minutes = timeRemaining / 60;
+        int seconds = timeRemaining % 60;
+
+        QString timeText = QString("Оставшееся время: %1:%2")
+                            .arg(minutes, 2, 10, QChar('0'))
+                            .arg(seconds, 2, 10, QChar('0'));
+
+        ui->timerLabel->setText(timeText);
+    } else {
+        timer->stop();
+        // Добавьте код для завершения теста или других действий по истечении времени
+        qDebug() << "Time is up!";
+    }
 }
 
 void Test_screen::readDataFromDatabase(const QSqlDatabase &db) {
@@ -120,6 +143,8 @@ void Test_screen::loadQuestionsFromDatabase() {
         textEdit->setObjectName(QString("questionText_%1").arg(question.id));
         textEdit->setHtml(question.question_text);
         textEdit->setTextInteractionFlags(Qt::NoTextInteraction);
+        textEdit->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+
 
         QuestionWidget newQuestionWidget;
         newQuestionWidget.textEdit = textEdit;
@@ -142,9 +167,15 @@ void Test_screen::loadQuestionsFromDatabase() {
         int answerCounter = 1;
         for (const Answer &answer : question.answers) {
             QCheckBox *checkBox = new QCheckBox();
-            QLabel *answerTextLabel = new QLabel();
+            CustomAutoResizingTextEdit *answerTextLabel = new CustomAutoResizingTextEdit();
             answerTextLabel->setObjectName(QString("answerText_%1_%2").arg(question.id).arg(answerCounter));
             answerTextLabel->setText(answer.answer_text);
+
+            // Установка минимальной высоты для текстового поля
+            answerTextLabel->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+            answerTextLabel->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+            answerTextLabel->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+            answerTextLabel->setReadOnly(true); // Опционально: чтобы текст был только для чтения
 
             AnswerWidget newAnswerWidget;
             newAnswerWidget.checkBox = checkBox;
@@ -155,7 +186,6 @@ void Test_screen::loadQuestionsFromDatabase() {
             QHBoxLayout *answerLayout = new QHBoxLayout();
             answerLayout->addWidget(checkBox);
             answerLayout->addWidget(answerTextLabel);
-            answerLayout->addStretch();
 
             newGridLayout->addLayout(answerLayout, 4 + answerCounter - 1, 0, 1, 3);
             answerCounter++;
@@ -184,6 +214,7 @@ void Test_screen::loadQuestionsFromDatabase() {
         textEdit->setObjectName(QString("openQuestionText_%1").arg(openQuestion.id));
         textEdit->setHtml(openQuestion.question_text);
         textEdit->setTextInteractionFlags(Qt::NoTextInteraction);
+        textEdit->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
         newGridLayout->addWidget(questionLabel, 0, 0, 1, 2);
         newGridLayout->addWidget(textEdit, 1, 0, 1, 3);
@@ -202,6 +233,9 @@ void Test_screen::loadQuestionsFromDatabase() {
         openQuestionLineEdits[openQuestion.id] = answerLineEdit;
     }
 }
+
+
+
 
 void Test_screen::printShuffledQuestions() {
     qDebug() << "Shuffled Questions:";

@@ -39,6 +39,12 @@ public:
         gridLayout->setContentsMargins(-1, 9, -1, 0);
         timerLabel = new QLabel(Test_screen);
         timerLabel->setObjectName(QString::fromUtf8("timerLabel"));
+        QSizePolicy sizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+        sizePolicy.setHorizontalStretch(0);
+        sizePolicy.setVerticalStretch(0);
+        sizePolicy.setHeightForWidth(timerLabel->sizePolicy().hasHeightForWidth());
+        timerLabel->setSizePolicy(sizePolicy);
+        timerLabel->setMinimumSize(QSize(0, 0));
         timerLabel->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
 
         gridLayout->addWidget(timerLabel, 0, 0, 1, 1);
@@ -73,7 +79,7 @@ public:
     void retranslateUi(QWidget *Test_screen)
     {
         Test_screen->setWindowTitle(QApplication::translate("Test_screen", "Form", nullptr));
-        timerLabel->setText(QApplication::translate("Test_screen", "TextLabel", nullptr));
+        timerLabel->setText(QApplication::translate("Test_screen", "00:00", nullptr));
     } // retranslateUi
 
 };
