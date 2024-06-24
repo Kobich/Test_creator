@@ -46,7 +46,7 @@ private slots:
     void adjustHeight() {
         document()->setTextWidth(width());
         QSize newSize(document()->size().toSize());
-        setMinimumHeight(newSize.height() + 10);
+        setMinimumHeight(newSize.height() + 15);
     }
 };
 
@@ -99,6 +99,7 @@ public:
 private slots:
     void updateTimer();
     void checkAnswers();
+    void on_completeTheTest_clicked();
 
 private:
     void readDataFromDatabase(const QSqlDatabase &db);
@@ -106,6 +107,7 @@ private:
     void loadQuestionsFromDatabase();
     void printShuffledQuestions();
     QString insertLineBreaks(const QString &text, int maxWidth, const QFont &font);
+
     Ui::Test_screen *ui;
     QTimer *timer;
     int timeRemaining;
@@ -114,6 +116,7 @@ private:
     QList<OpenQuestion> openQuestions;
     QList<Question> shuffledQuestions;
     QList<OpenQuestion> shuffledOpenQuestions;
+    QString extractPlainTextFromHtml(const QString &html);
 
     QList<QuestionWidget> questionWidgets;
 
@@ -124,6 +127,8 @@ private:
     // Storage for user answers
     QMap<int, QList<QCheckBox*>> questionCheckBoxes;
     QMap<int, QLineEdit*> openQuestionLineEdits;
+    QMap<int, QList<bool>> getUserAnswers(); // Для обычных вопросов
+    QMap<int, QString> getUserOpenAnswers();
 };
 
 #endif // TEST_SCREEN_H

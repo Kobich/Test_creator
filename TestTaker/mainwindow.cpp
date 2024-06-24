@@ -6,7 +6,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow),
     mainScreen(new Main_screen(this)),
     testScreen(nullptr), // Инициализируем как nullptr
-    resultScreen(new Result_screen(this))
+    resultScreen(nullptr)
 {
     ui->setupUi(this);
     setCentralWidget(mainScreen);

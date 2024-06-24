@@ -73,6 +73,16 @@
          </property>
         </layout>
        </item>
+       <item row="1" column="0">
+        <widget class="QPushButton" name="completeTheTest">
+         <property name="locale">
+          <locale language="Russian" country="Russia"/>
+         </property>
+         <property name="text">
+          <string>Завершить тест</string>
+         </property>
+        </widget>
+       </item>
       </layout>
      </widget>
     </widget>

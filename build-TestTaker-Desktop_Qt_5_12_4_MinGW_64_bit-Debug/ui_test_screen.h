@@ -9,10 +9,12 @@
 #ifndef UI_TEST_SCREEN_H
 #define UI_TEST_SCREEN_H
 
+#include <QtCore/QLocale>
 #include <QtCore/QVariant>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QGridLayout>
 #include <QtWidgets/QLabel>
+#include <QtWidgets/QPushButton>
 #include <QtWidgets/QScrollArea>
 #include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QWidget>
@@ -28,6 +30,7 @@ public:
     QWidget *scrollAreaWidgetContents;
     QGridLayout *gridLayout_2;
     QVBoxLayout *verticalLayout;
+    QPushButton *completeTheTest;
 
     void setupUi(QWidget *Test_screen)
     {
@@ -66,6 +69,12 @@ public:
 
         gridLayout_2->addLayout(verticalLayout, 0, 0, 1, 1);
 
+        completeTheTest = new QPushButton(scrollAreaWidgetContents);
+        completeTheTest->setObjectName(QString::fromUtf8("completeTheTest"));
+        completeTheTest->setLocale(QLocale(QLocale::Russian, QLocale::Russia));
+
+        gridLayout_2->addWidget(completeTheTest, 1, 0, 1, 1);
+
         scrollArea->setWidget(scrollAreaWidgetContents);
 
         gridLayout->addWidget(scrollArea, 1, 0, 1, 1);
@@ -80,6 +89,7 @@ public:
     {
         Test_screen->setWindowTitle(QApplication::translate("Test_screen", "Form", nullptr));
         timerLabel->setText(QApplication::translate("Test_screen", "00:00", nullptr));
+        completeTheTest->setText(QApplication::translate("Test_screen", "\320\227\320\260\320\262\320\265\321\200\321\210\320\270\321\202\321\214 \321\202\320\265\321\201\321\202", nullptr));
     } // retranslateUi
 
 };

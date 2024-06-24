@@ -11,6 +11,7 @@
 #include <QLineEdit>
 #include <algorithm>
 #include <random>
+#include <QMessageBox>
 
 Test_screen::Test_screen(const QSqlDatabase &db, QWidget *parent, int timeTest) :
     QWidget(parent),
@@ -33,7 +34,7 @@ Test_screen::Test_screen(const QSqlDatabase &db, QWidget *parent, int timeTest) 
     loadQuestionsFromDatabase();
 
     // Выводим перемешанные вопросы
-    printShuffledQuestions();
+
 
     timer = new QTimer(this);
     connect(timer, &QTimer::timeout, this, &Test_screen::updateTimer);
@@ -43,6 +44,10 @@ Test_screen::Test_screen(const QSqlDatabase &db, QWidget *parent, int timeTest) 
 Test_screen::~Test_screen()
 {
     delete ui;
+}
+
+void Test_screen::on_completeTheTest_clicked(){
+    checkAnswers();
 }
 
 void Test_screen::updateTimer() {
@@ -63,6 +68,9 @@ void Test_screen::updateTimer() {
         qDebug() << "Time is up!";
     }
 }
+
+
+
 
 void Test_screen::readDataFromDatabase(const QSqlDatabase &db) {
     if (!db.isOpen()) {
@@ -209,6 +217,7 @@ void Test_screen::loadQuestionsFromDatabase() {
             newGridLayout->addLayout(scoreLayout, 0, 0, 1, 3, Qt::AlignRight);
 
             int answerCounter = 1;
+            QList<AnswerWidget> answerWidgets;
             for (const Answer &answer : question.answers) {
                 QCheckBox *checkBox = new QCheckBox();
                 CustomAutoResizingTextEdit *answerTextLabel = new CustomAutoResizingTextEdit();
@@ -224,6 +233,7 @@ void Test_screen::loadQuestionsFromDatabase() {
                 AnswerWidget newAnswerWidget;
                 newAnswerWidget.checkBox = checkBox;
                 newAnswerWidget.textLabel = answerTextLabel;
+                answerWidgets.append(newAnswerWidget);
 
                 QHBoxLayout *answerLayout = new QHBoxLayout();
                 answerLayout->addWidget(checkBox);
@@ -242,61 +252,121 @@ void Test_screen::loadQuestionsFromDatabase() {
             // Добавляем виджет в список виджетов вопросов
             QuestionWidget newQuestionWidget;
             newQuestionWidget.textEdit = textEdit;
-            newQuestionWidget.answers = QList<AnswerWidget>();
+            newQuestionWidget.answers = answerWidgets; // Добавляем ответы в виджет вопроса
             newQuestionWidget.scoreLineEdit = scoreLineEdit;
             questionWidgets.append(newQuestionWidget);
 
             // Добавляем чекбоксы в QMap для дальнейшей проверки ответов
-            questionCheckBoxes[question.id] = QList<QCheckBox*>();
+            QList<QCheckBox*> checkBoxList;
             for (const AnswerWidget &answerWidget : newQuestionWidget.answers) {
-                questionCheckBoxes[question.id].append(answerWidget.checkBox);
+                checkBoxList.append(answerWidget.checkBox);
             }
+            questionCheckBoxes[question.id] = checkBoxList;
         }
     }
 }
 
 
-
-
-void Test_screen::printShuffledQuestions() {
-    qDebug() << "Shuffled Questions:";
+QMap<int, QList<bool>> Test_screen::getUserAnswers() {
+    QMap<int, QList<bool>> userAnswers;
     for (const Question &question : shuffledQuestions) {
-        qDebug() << "ID:" << question.id << "Text:" << question.question_text;
-        for (const Answer &answer : question.answers) {
-            qDebug() << "Answer ID:" << answer.id << "Text:" << answer.answer_text << "Correct:" << answer.is_correct;
-        }
-    }
-
-    qDebug() << "Shuffled Open Questions:";
-    for (const OpenQuestion &openQuestion : shuffledOpenQuestions) {
-        qDebug() << "ID:" << openQuestion.id << "Question:" << openQuestion.question_text << "Answer:" << openQuestion.answer_text;
-    }
-}
-
-void Test_screen::checkAnswers() {
-    // Checking multiple choice questions
-    for (const Question &question : shuffledQuestions) {
+        QList<bool> answers;
         const QList<QCheckBox*> checkBoxes = questionCheckBoxes[question.id];
-        for (const Answer &answer : question.answers) {
-            bool userChecked = checkBoxes[answer.id]->isChecked();
-            bool correct = (answer.is_correct == 1);
-            if (userChecked != correct) {
-                qDebug() << "Question ID:" << question.id << "Answer ID:" << answer.id << "is incorrect.";
-            } else {
-                qDebug() << "Question ID:" << question.id << "Answer ID:" << answer.id << "is correct.";
-            }
+        for (const QCheckBox *checkBox : checkBoxes) {
+            answers.append(checkBox->isChecked());
         }
+        userAnswers[question.id] = answers;
     }
+    return userAnswers;
+}
 
-    // Checking open questions
+QMap<int, QString> Test_screen::getUserOpenAnswers() {
+    QMap<int, QString> userOpenAnswers;
     for (const OpenQuestion &openQuestion : shuffledOpenQuestions) {
         QString userAnswer = openQuestionLineEdits[openQuestion.id]->text();
-        if (userAnswer.trimmed().toLower() != openQuestion.answer_text.trimmed().toLower()) {
-            qDebug() << "Open Question ID:" << openQuestion.id << "Answer is incorrect.";
+        userOpenAnswers[openQuestion.id] = userAnswer;
+    }
+    return userOpenAnswers;
+}
+
+
+void Test_screen::checkAnswers() {
+    QMap<int, QList<bool>> userAnswers = getUserAnswers();
+    QMap<int, QString> userOpenAnswers = getUserOpenAnswers();
+
+    int totalScore = 0;
+
+    // Проверка ответов на обычные вопросы
+    for (const Question &question : shuffledQuestions) {
+        if (userAnswers.contains(question.id)) {
+            const QList<bool> userChecked = userAnswers[question.id];
+
+            int correctAnswersCount = 0;
+            int incorrectAnswersCount = 0;
+            int totalCorrectAnswers = 0;
+
+            // Считаем общее количество правильных ответов
+            for (const Answer &answer : question.answers) {
+                if (answer.is_correct) {
+                    totalCorrectAnswers++;
+                }
+            }
+
+            for (int i = 0; i < question.answers.size(); ++i) {
+                const Answer &answer = question.answers[i];
+                if (i < userChecked.size()) {
+                    if (userChecked[i]) {
+                        if (answer.is_correct) {
+                            correctAnswersCount++;
+                        } else {
+                            incorrectAnswersCount++;
+                        }
+                    }
+                }
+            }
+
+            double scoreFraction = static_cast<double>(correctAnswersCount - incorrectAnswersCount) / totalCorrectAnswers;
+            int questionScore = static_cast<int>(scoreFraction * question.score);
+            if (questionScore < 0) {
+                questionScore = 0;
+            }
+
+            totalScore += questionScore;
+
+            qDebug() << "Question ID:" << question.id << "Partial score:" << questionScore;
         } else {
-            qDebug() << "Open Question ID:" << openQuestion.id << "Answer is correct.";
+            qDebug() << "Question ID:" << question.id << "No answers selected.";
         }
     }
+
+    // Проверка ответов на открытые вопросы
+    for (const OpenQuestion &openQuestion : shuffledOpenQuestions) {
+        if (userOpenAnswers.contains(openQuestion.id)) {
+            QString userAnswer = userOpenAnswers[openQuestion.id];
+            QString correctAnswer = openQuestion.answer_text;
+
+            // Удаляем HTML-теги для сравнения
+            QString userAnswerPlain = extractPlainTextFromHtml(userAnswer);
+            QString correctAnswerPlain = extractPlainTextFromHtml(correctAnswer);
+
+            if (userAnswerPlain.trimmed().toLower() == correctAnswerPlain.trimmed().toLower()) {
+                totalScore += openQuestion.score;
+                qDebug() << "Open Question ID:" << openQuestion.id << "Answer is correct.";
+            } else {
+                qDebug() << "Open Question ID:" << openQuestion.id << "Answer is incorrect.";
+            }
+        } else {
+            qDebug() << "Open Question ID:" << openQuestion.id << "No answer provided.";
+        }
+    }
+
+    qDebug() << "Total Score:" << totalScore;
+}
+
+QString Test_screen::extractPlainTextFromHtml(const QString &htmlText) {
+    QTextDocument textDoc;
+    textDoc.setHtml(htmlText);
+    return textDoc.toPlainText();
 }
 
 
