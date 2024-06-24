@@ -11,6 +11,7 @@
 #include <QMap>
 #include <QLineEdit>
 #include <QTextEdit>
+#include <QWheelEvent>
 
 class AutoResizingTextEdit : public QTextEdit {
     Q_OBJECT
@@ -18,30 +19,27 @@ public:
     AutoResizingTextEdit(QWidget *parent = nullptr) : QTextEdit(parent) {
         setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Minimum);
         connect(this, &QTextEdit::textChanged, this, &AutoResizingTextEdit::adjustHeight);
+        setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     }
 
-private slots:
-    void adjustHeight() {
-        document()->setTextWidth(width());
-        QSize newSize(document()->size().toSize());
-        setMinimumHeight(newSize.height() + 10);
-    }
-};
-
-class CustomAutoResizingTextEdit : public QTextEdit {
-    Q_OBJECT
-public:
-    CustomAutoResizingTextEdit(QWidget *parent = nullptr) : QTextEdit(parent) {
-        setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Minimum);
-        connect(this, &QTextEdit::textChanged, this, &CustomAutoResizingTextEdit::adjustHeight);
-    }
 protected:
+
     void resizeEvent(QResizeEvent *event) override {
         QTextEdit::resizeEvent(event); // Вызываем реализацию базового класса
-
-        // При изменении размера виджета также корректируем его высоту
         adjustHeight();
     }
+
+    void wheelEvent(QWheelEvent *event) override {
+           // Не вызываем базовую реализацию, чтобы предотвратить прокрутку
+           event->ignore();
+       }
+
+       // Переопределяем события прокрутки для вертикального и горизонтального прокрутки
+       void scrollContentsBy(int dx, int dy) override {
+           // Ничего не делаем, чтобы предотвратить прокрутку
+           Q_UNUSED(dx);
+           Q_UNUSED(dy);
+       }
 private slots:
     void adjustHeight() {
         document()->setTextWidth(width());
@@ -49,6 +47,8 @@ private slots:
         setMinimumHeight(newSize.height() + 15);
     }
 };
+
+
 
 namespace Ui {
 class Test_screen;
@@ -84,7 +84,7 @@ public:
 
     struct AnswerWidget {
         QCheckBox *checkBox;
-        CustomAutoResizingTextEdit *textLabel;
+        AutoResizingTextEdit *textLabel;
     };
 
     struct QuestionWidget {
@@ -101,12 +101,15 @@ private slots:
     void checkAnswers();
     void on_completeTheTest_clicked();
 
+
+
 private:
     void readDataFromDatabase(const QSqlDatabase &db);
     void shuffleQuestions();
     void loadQuestionsFromDatabase();
     void printShuffledQuestions();
     QString insertLineBreaks(const QString &text, int maxWidth, const QFont &font);
+
 
     Ui::Test_screen *ui;
     QTimer *timer;

@@ -12,6 +12,7 @@
 #include <algorithm>
 #include <random>
 #include <QMessageBox>
+#include <QThread>
 
 Test_screen::Test_screen(const QSqlDatabase &db, QWidget *parent, int timeTest) :
     QWidget(parent),
@@ -35,10 +36,13 @@ Test_screen::Test_screen(const QSqlDatabase &db, QWidget *parent, int timeTest) 
 
     // Выводим перемешанные вопросы
 
-
     timer = new QTimer(this);
     connect(timer, &QTimer::timeout, this, &Test_screen::updateTimer);
     timer->start(1000);
+    show();
+    //триггер для нормального отображения окон
+    parent->resize(900, 800);
+
 }
 
 Test_screen::~Test_screen()
@@ -46,7 +50,9 @@ Test_screen::~Test_screen()
     delete ui;
 }
 
+
 void Test_screen::on_completeTheTest_clicked(){
+
     checkAnswers();
 }
 
@@ -162,6 +168,9 @@ void Test_screen::loadQuestionsFromDatabase() {
                 [&questionType](const OpenQuestion &q) { return q.id == questionType.first; }).operator*();
 
             QWidget *newWidget = new QWidget();
+
+
+
             QGridLayout *newGridLayout = new QGridLayout(newWidget);
 
             QLabel *questionLabel = new QLabel(QString("Открытый вопрос %1").arg(openQuestion.id));
@@ -170,6 +179,17 @@ void Test_screen::loadQuestionsFromDatabase() {
             textEdit->setHtml(openQuestion.question_text);
             textEdit->setTextInteractionFlags(Qt::NoTextInteraction);
             textEdit->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+
+            QLabel *scoreLabel = new QLabel("Баллы:");
+            QLabel *scoreLineEdit = new QLabel();
+            scoreLineEdit->setText(QString::number(openQuestion.score));
+            scoreLineEdit->setMaximumWidth(30);
+
+            QHBoxLayout *scoreLayout = new QHBoxLayout();
+            scoreLayout->addWidget(scoreLabel);
+            scoreLayout->addWidget(scoreLineEdit);
+
+            newGridLayout->addLayout(scoreLayout, 0, 2, 1, 1, Qt::AlignRight);
 
             newGridLayout->addWidget(questionLabel, 0, 0, 1, 2);
             newGridLayout->addWidget(textEdit, 1, 0, 1, 3);
@@ -220,7 +240,7 @@ void Test_screen::loadQuestionsFromDatabase() {
             QList<AnswerWidget> answerWidgets;
             for (const Answer &answer : question.answers) {
                 QCheckBox *checkBox = new QCheckBox();
-                CustomAutoResizingTextEdit *answerTextLabel = new CustomAutoResizingTextEdit();
+                AutoResizingTextEdit *answerTextLabel = new AutoResizingTextEdit();
                 answerTextLabel->setObjectName(QString("answerText_%1_%2").arg(question.id).arg(answerCounter));
                 answerTextLabel->setText(answer.answer_text);
 
@@ -240,7 +260,9 @@ void Test_screen::loadQuestionsFromDatabase() {
                 answerLayout->addWidget(answerTextLabel);
 
                 newGridLayout->addLayout(answerLayout, 4 + answerCounter - 1, 0, 1, 3);
+
                 answerCounter++;
+
             }
 
             newGridLayout->setColumnStretch(1, 1);
@@ -264,6 +286,7 @@ void Test_screen::loadQuestionsFromDatabase() {
             questionCheckBoxes[question.id] = checkBoxList;
         }
     }
+
 }
 
 

@@ -20,6 +20,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    show();
+    resize(this->width(),this->height());
 
 }
 
@@ -88,7 +90,7 @@ void MainWindow::addAnswerButton() {
 
     AnswerWidget answerWidget;
     answerWidget.checkBox = new QCheckBox();
-    answerWidget.textEdit = new CustomAutoResizingTextEdit();
+    answerWidget.textEdit = new AutoResizingTextEdit();
 
     QWidget *parentWidget = clickedButton->parentWidget();
     QGridLayout *gridLayoutParent = qobject_cast<QGridLayout*>(parentWidget->layout());
@@ -703,7 +705,7 @@ int score = questionQuery.value(2).toInt(); // Считывание баллов
 
         QCheckBox *checkBox = new QCheckBox();
         checkBox->setChecked(isCorrect);
-        CustomAutoResizingTextEdit *answerTextEdit = new CustomAutoResizingTextEdit();
+        AutoResizingTextEdit *answerTextEdit = new AutoResizingTextEdit();
         answerTextEdit->setObjectName(QString("answerText_%1_%2").arg(questionId).arg(answerCounter));
         answerTextEdit->setText(answerText);
         answerTextEdit->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);

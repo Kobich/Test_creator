@@ -279,9 +279,9 @@ public:
         actionCreate->setText(QApplication::translate("Main_screen", "\320\241\320\276\320\267\320\264\320\260\321\202\321\214 \320\275\320\276\320\262\321\213\320\271", nullptr));
         actionSave->setText(QApplication::translate("Main_screen", "\320\241\320\276\321\205\321\200\320\260\320\275\320\270\321\202\321\214", nullptr));
         assessment_2->setText(QApplication::translate("Main_screen", "\320\237\321\200\320\276\321\206\320\265\320\275\321\202\320\275\321\213\320\271 \320\277\320\276\321\200\320\276\320\263 \320\264\320\273\321\217 \320\277\320\276\320\273\321\203\321\207\320\265\320\275\320\270\321\217 \320\276\321\206\320\265\320\275\320\272\320\270", nullptr));
-        labelFor3_2->setText(QApplication::translate("Main_screen", "\320\243\320\264\320\276\320\262\320\273\320\265\321\202\320\262\320\276\321\200\320\270\321\202\320\265\320\273\321\214\320\275\320\276, %", nullptr));
-        labelFor4_2->setText(QApplication::translate("Main_screen", "                     \320\245\320\276\321\200\320\276\321\210\320\276, %", nullptr));
-        labelFor5_2->setText(QApplication::translate("Main_screen", "                     \320\236\321\202\320\273\320\270\321\207\320\275\320\276, %", nullptr));
+        labelFor3_2->setText(QApplication::translate("Main_screen", "\320\243\320\264\320\276\320\262\320\273\320\265\321\202\320\262\320\276\321\200\320\270\321\202\320\265\320\273\321\214\320\275\320\276", nullptr));
+        labelFor4_2->setText(QApplication::translate("Main_screen", "                     \320\245\320\276\321\200\320\276\321\210\320\276", nullptr));
+        labelFor5_2->setText(QApplication::translate("Main_screen", "                     \320\236\321\202\320\273\320\270\321\207\320\275\320\276", nullptr));
         labelForTime_2->setText(QApplication::translate("Main_screen", "\320\222\321\200\320\265\320\274\321\217 \320\262\321\213\320\277\320\276\320\273\320\275\320\265\320\275\320\270\321\217 \321\202\320\265\321\201\321\202\320\260, \320\274\320\270\320\275\321\203\321\202\321\213", nullptr));
         chooseTestButton->setText(QApplication::translate("Main_screen", "\320\222\321\213\320\261\321\200\320\260\321\202\321\214 \321\202\320\265\321\201\321\202", nullptr));
     } // retranslateUi

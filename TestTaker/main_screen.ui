@@ -83,7 +83,7 @@
             </sizepolicy>
            </property>
            <property name="text">
-            <string>Удовлетворительно, %</string>
+            <string>Удовлетворительно</string>
            </property>
           </widget>
          </item>
@@ -131,7 +131,7 @@
             </sizepolicy>
            </property>
            <property name="text">
-            <string>                     Хорошо, %</string>
+            <string>                     Хорошо</string>
            </property>
           </widget>
          </item>
@@ -179,7 +179,7 @@
             </sizepolicy>
            </property>
            <property name="text">
-            <string>                     Отлично, %</string>
+            <string>                     Отлично</string>
            </property>
           </widget>
          </item>

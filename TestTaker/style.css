@@ -1,10 +1,13 @@
 /* style.qss */
 
-/* Общие стили */
+/* Общие стили для всех QWidget */
 QWidget {
     font-family: Arial, sans-serif;
     font-size: 18px;
     color: #333;
+    background-color: #e3f2fd;
+
+     /* Убираем границу для всех QWidget */
 }
 
 /* Стили для QTextEdit */
@@ -16,9 +19,18 @@ QTextEdit, AutoResizingTextEdit {
     font-size: 16px;
 }
 
+CustomAutoResizingTextEdit {
+    border: none; /* Убираем границу для CustomAutoResizingTextEdit */
+    padding: 10px;
+    border-radius: 8px;
+    font-size: 16px;
+    color: #333; /* Темный цвет текста */
+}
+
 /* Стили для QLabel */
 QLabel {
     font-weight: bold;
+    border: none;
     color: #0d47a1; /* Темно-синий цвет текста */
 }
 

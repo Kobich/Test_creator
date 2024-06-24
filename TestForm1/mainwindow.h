@@ -20,43 +20,39 @@
 // Новый класс AutoResizingTextEdit
 class AutoResizingTextEdit : public QTextEdit {
     Q_OBJECT
-
 public:
-    explicit AutoResizingTextEdit(QWidget *parent = nullptr) : QTextEdit(parent) {
-        connect(this, &QTextEdit::textChanged, this, &AutoResizingTextEdit::adjustHeight);
-        setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
-        setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff); // Отключаем вертикальную полосу прокрутки
-    }
-
-private slots:
-    void adjustHeight() {
-        document()->setTextWidth(viewport()->width());
-        QSize size = document()->size().toSize();
-        setMinimumHeight(size.height() + 10); // Увеличение минимальной высоты на 10 пикселей
-    }
-};
-
-class CustomAutoResizingTextEdit : public QTextEdit {
-    Q_OBJECT
-public:
-    CustomAutoResizingTextEdit(QWidget *parent = nullptr) : QTextEdit(parent) {
+    AutoResizingTextEdit(QWidget *parent = nullptr) : QTextEdit(parent) {
         setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Minimum);
-        connect(this, &QTextEdit::textChanged, this, &CustomAutoResizingTextEdit::adjustHeight);
+        connect(this, &QTextEdit::textChanged, this, &AutoResizingTextEdit::adjustHeight);
+        setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     }
+
 protected:
+
     void resizeEvent(QResizeEvent *event) override {
         QTextEdit::resizeEvent(event); // Вызываем реализацию базового класса
-
-        // При изменении размера виджета также корректируем его высоту
         adjustHeight();
     }
+
+    void wheelEvent(QWheelEvent *event) override {
+           // Не вызываем базовую реализацию, чтобы предотвратить прокрутку
+           event->ignore();
+       }
+
+       // Переопределяем события прокрутки для вертикального и горизонтального прокрутки
+       void scrollContentsBy(int dx, int dy) override {
+           // Ничего не делаем, чтобы предотвратить прокрутку
+           Q_UNUSED(dx);
+           Q_UNUSED(dy);
+       }
 private slots:
     void adjustHeight() {
         document()->setTextWidth(width());
         QSize newSize(document()->size().toSize());
-        setMinimumHeight(newSize.height() + 10);
+        setMinimumHeight(newSize.height() + 15);
     }
 };
+
 
 
 namespace Ui {
@@ -72,7 +68,7 @@ struct OpenQuestionWidget {
 
 struct AnswerWidget {
     QCheckBox *checkBox;
-    CustomAutoResizingTextEdit *textEdit; // Используем AutoResizingTextEdit вместо QTextEdit
+    AutoResizingTextEdit *textEdit; // Используем AutoResizingTextEdit вместо QTextEdit
 };
 
 struct QuestionWidget {
