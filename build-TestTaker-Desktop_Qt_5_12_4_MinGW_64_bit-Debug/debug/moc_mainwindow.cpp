@@ -21,8 +21,8 @@ QT_BEGIN_MOC_NAMESPACE
 QT_WARNING_PUSH
 QT_WARNING_DISABLE_DEPRECATED
 struct qt_meta_stringdata_MainWindow_t {
-    QByteArrayData data[7];
-    char stringdata0[59];
+    QByteArrayData data[10];
+    char stringdata0[97];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -37,11 +37,15 @@ QT_MOC_LITERAL(2, 21, 0), // ""
 QT_MOC_LITERAL(3, 22, 8), // "timeTest"
 QT_MOC_LITERAL(4, 31, 12), // "QSqlDatabase"
 QT_MOC_LITERAL(5, 44, 2), // "db"
-QT_MOC_LITERAL(6, 47, 11) // "showResults"
+QT_MOC_LITERAL(6, 47, 11), // "showResults"
+QT_MOC_LITERAL(7, 59, 19), // "QMap<QString,float>"
+QT_MOC_LITERAL(8, 79, 5), // "score"
+QT_MOC_LITERAL(9, 85, 11) // "takeNewTest"
 
     },
     "MainWindow\0startTest\0\0timeTest\0"
-    "QSqlDatabase\0db\0showResults"
+    "QSqlDatabase\0db\0showResults\0"
+    "QMap<QString,float>\0score\0takeNewTest"
 };
 #undef QT_MOC_LITERAL
 
@@ -51,7 +55,7 @@ static const uint qt_meta_data_MainWindow[] = {
        8,       // revision
        0,       // classname
        0,    0, // classinfo
-       2,   14, // methods
+       3,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -59,11 +63,13 @@ static const uint qt_meta_data_MainWindow[] = {
        0,       // signalCount
 
  // slots: name, argc, parameters, tag, flags
-       1,    2,   24,    2, 0x08 /* Private */,
-       6,    0,   29,    2, 0x08 /* Private */,
+       1,    2,   29,    2, 0x08 /* Private */,
+       6,    1,   34,    2, 0x08 /* Private */,
+       9,    0,   37,    2, 0x08 /* Private */,
 
  // slots: parameters
     QMetaType::Void, QMetaType::Int, 0x80000000 | 4,    3,    5,
+    QMetaType::Void, 0x80000000 | 7,    8,
     QMetaType::Void,
 
        0        // eod
@@ -76,7 +82,8 @@ void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
         Q_UNUSED(_t)
         switch (_id) {
         case 0: _t->startTest((*reinterpret_cast< int(*)>(_a[1])),(*reinterpret_cast< const QSqlDatabase(*)>(_a[2]))); break;
-        case 1: _t->showResults(); break;
+        case 1: _t->showResults((*reinterpret_cast< QMap<QString,float>(*)>(_a[1]))); break;
+        case 2: _t->takeNewTest(); break;
         default: ;
         }
     }
@@ -111,13 +118,13 @@ int MainWindow::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 2)
+        if (_id < 3)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 2;
+        _id -= 3;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 2)
+        if (_id < 3)
             *reinterpret_cast<int*>(_a[0]) = -1;
-        _id -= 2;
+        _id -= 3;
     }
     return _id;
 }

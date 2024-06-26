@@ -1,9 +1,11 @@
+debug/autoresizingtextedit.o
 debug/main.o
 debug/main_screen.o
 debug/mainwindow.o
 debug/result_screen.o
 debug/test_screen.o
 debug/qrc_qrc.o
+debug/moc_autoresizingtextedit.o
 debug/moc_main_screen.o
 debug/moc_mainwindow.o
 debug/moc_result_screen.o

@@ -5,50 +5,13 @@
 #include <QSqlDatabase>
 #include <QTimer>
 #include <QVBoxLayout>
-#include <QGridLayout>
 #include <QCheckBox>
 #include <QLabel>
 #include <QMap>
 #include <QLineEdit>
 #include <QTextEdit>
 #include <QWheelEvent>
-
-class AutoResizingTextEdit : public QTextEdit {
-    Q_OBJECT
-public:
-    AutoResizingTextEdit(QWidget *parent = nullptr) : QTextEdit(parent) {
-        setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Minimum);
-        connect(this, &QTextEdit::textChanged, this, &AutoResizingTextEdit::adjustHeight);
-        setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    }
-
-protected:
-
-    void resizeEvent(QResizeEvent *event) override {
-        QTextEdit::resizeEvent(event); // Вызываем реализацию базового класса
-        adjustHeight();
-    }
-
-    void wheelEvent(QWheelEvent *event) override {
-           // Не вызываем базовую реализацию, чтобы предотвратить прокрутку
-           event->ignore();
-       }
-
-       // Переопределяем события прокрутки для вертикального и горизонтального прокрутки
-       void scrollContentsBy(int dx, int dy) override {
-           // Ничего не делаем, чтобы предотвратить прокрутку
-           Q_UNUSED(dx);
-           Q_UNUSED(dy);
-       }
-private slots:
-    void adjustHeight() {
-        document()->setTextWidth(width());
-        QSize newSize(document()->size().toSize());
-        setMinimumHeight(newSize.height() + 15);
-    }
-};
-
-
+#include "autoresizingtextedit.h"
 
 namespace Ui {
 class Test_screen;
@@ -96,12 +59,13 @@ public:
     explicit Test_screen(const QSqlDatabase &db, QWidget *parent = nullptr, int timeTest = 0);
     ~Test_screen();
 
+signals:
+    void testCompleted(QMap<QString, float> score);
+
 private slots:
     void updateTimer();
     void checkAnswers();
-    void on_completeTheTest_clicked();
-
-
+    void completeTheTest();
 
 private:
     void readDataFromDatabase(const QSqlDatabase &db);
@@ -109,7 +73,12 @@ private:
     void loadQuestionsFromDatabase();
     void printShuffledQuestions();
     QString insertLineBreaks(const QString &text, int maxWidth, const QFont &font);
+    void readScoreTable(const QSqlDatabase &db);
+    void closeDatabase();
+    QString extractPlainTextFromHtml(const QString &html);
 
+    QMap<int, QList<bool>> getUserAnswers(); // Для обычных вопросов
+    QMap<int, QString> getUserOpenAnswers();
 
     Ui::Test_screen *ui;
     QTimer *timer;
@@ -119,19 +88,16 @@ private:
     QList<OpenQuestion> openQuestions;
     QList<Question> shuffledQuestions;
     QList<OpenQuestion> shuffledOpenQuestions;
-    QString extractPlainTextFromHtml(const QString &html);
-
     QList<QuestionWidget> questionWidgets;
 
-    // Layout for questions and open questions
-    QVBoxLayout *questionsLayout;
-    QVBoxLayout *openQuestionsLayout;
+    QVBoxLayout *questionsLayout; // Layout for questions
+    QVBoxLayout *openQuestionsLayout; // Layout for open questions
 
-    // Storage for user answers
-    QMap<int, QList<QCheckBox*>> questionCheckBoxes;
+    QMap<int, QList<QCheckBox*>> questionCheckBoxes; // Storage for user answers
     QMap<int, QLineEdit*> openQuestionLineEdits;
-    QMap<int, QList<bool>> getUserAnswers(); // Для обычных вопросов
-    QMap<int, QString> getUserOpenAnswers();
+
+    QMap<QString, float> score;
+    QSqlDatabase db;
 };
 
 #endif // TEST_SCREEN_H

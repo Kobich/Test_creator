@@ -298,10 +298,10 @@
           <enum>QAbstractScrollArea::AdjustIgnored</enum>
          </property>
          <property name="readOnly">
-          <bool>false</bool>
+          <bool>true</bool>
          </property>
          <property name="textInteractionFlags">
-          <set>Qt::TextEditable</set>
+          <set>Qt::TextSelectableByMouse</set>
          </property>
         </widget>
        </item>

@@ -25,6 +25,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 CONFIG += c++17
 
 SOURCES += \
+        autoresizingtextedit.cpp \
         main.cpp \
         main_screen.cpp \
         mainwindow.cpp \
@@ -32,6 +33,7 @@ SOURCES += \
         test_screen.cpp
 
 HEADERS += \
+        autoresizingtextedit.h \
         main_screen.h \
         mainwindow.h \
         result_screen.h \

@@ -220,8 +220,8 @@ public:
         timeOfTest_2->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
         timeOfTest_2->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
         timeOfTest_2->setSizeAdjustPolicy(QAbstractScrollArea::AdjustIgnored);
-        timeOfTest_2->setReadOnly(false);
-        timeOfTest_2->setTextInteractionFlags(Qt::TextEditable);
+        timeOfTest_2->setReadOnly(true);
+        timeOfTest_2->setTextInteractionFlags(Qt::TextSelectableByMouse);
 
         horizontalLayout_10->addWidget(timeOfTest_2);
 

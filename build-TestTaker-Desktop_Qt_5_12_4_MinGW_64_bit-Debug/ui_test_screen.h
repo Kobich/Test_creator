@@ -88,7 +88,7 @@ public:
     void retranslateUi(QWidget *Test_screen)
     {
         Test_screen->setWindowTitle(QApplication::translate("Test_screen", "Form", nullptr));
-        timerLabel->setText(QApplication::translate("Test_screen", "00:00", nullptr));
+        timerLabel->setText(QApplication::translate("Test_screen", "\320\236\321\201\321\202\320\260\320\262\321\210\320\265\320\265\321\201\321\217 \320\262\321\200\320\265\320\274\321\217: 00:00", nullptr));
         completeTheTest->setText(QApplication::translate("Test_screen", "\320\227\320\260\320\262\320\265\321\200\321\210\320\270\321\202\321\214 \321\202\320\265\321\201\321\202", nullptr));
     } // retranslateUi
 

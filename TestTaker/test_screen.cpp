@@ -17,7 +17,8 @@
 Test_screen::Test_screen(const QSqlDatabase &db, QWidget *parent, int timeTest) :
     QWidget(parent),
     ui(new Ui::Test_screen),
-    timeRemaining(timeTest* 60)
+    timeRemaining(timeTest* 60),
+    db(db)
 {
     ui->setupUi(this);
 
@@ -31,30 +32,90 @@ Test_screen::Test_screen(const QSqlDatabase &db, QWidget *parent, int timeTest) 
     // Перемешиваем вопросы
     shuffleQuestions();
 
-    // Загружаем вопросы из базы данных и создаем виджеты
+
     loadQuestionsFromDatabase();
 
-    // Выводим перемешанные вопросы
+
 
     timer = new QTimer(this);
     connect(timer, &QTimer::timeout, this, &Test_screen::updateTimer);
     timer->start(1000);
+
+    readScoreTable(db);
+    closeDatabase();
+
+    connect(ui->completeTheTest, &QPushButton::clicked, [=]() {
+        completeTheTest();
+    });
+
     show();
     //триггер для нормального отображения окон
     parent->resize(900, 800);
+
+
 
 }
 
 Test_screen::~Test_screen()
 {
+
     delete ui;
+
+}
+
+void Test_screen::closeDatabase()
+{
+    if (db.isOpen()) {
+        db.close();
+        qDebug() << "Database closed";
+    } else {
+        qDebug() << "Database was already closed";
+    }
+
+    QString connectionName = db.connectionName();
+    db = QSqlDatabase(); // Сбрасываем объект базы данных
+    QSqlDatabase::removeDatabase(connectionName); // Удаляем соединение из пула
+    qDebug() << "Database connection removed:" << connectionName;
 }
 
 
-void Test_screen::on_completeTheTest_clicked(){
+void Test_screen::completeTheTest(){
+    qDebug()<<"Button clicked";
 
     checkAnswers();
+    emit testCompleted(score);
+
 }
+
+void Test_screen::readScoreTable(const QSqlDatabase &db) {
+    if (!db.isOpen()) {
+        qDebug() << "Database is not open.";
+        return;
+    }
+
+    QSqlQuery query("SELECT score_satisfactory, score_good, score_excellent FROM scores", db);
+
+    if (!query.exec()) {
+        qDebug() << "Error executing query:" << query.lastError().text();
+        return;
+    }
+
+    if (query.next()) {
+        int scoreSatisfactory = query.value(0).toInt();
+        int scoreGood = query.value(1).toInt();
+        int scoreExcellent = query.value(2).toInt();
+
+
+
+        score.insert("score_satisfactory", scoreSatisfactory);
+        score.insert("score_good", scoreGood);
+        score.insert("score_excellent", scoreExcellent);
+
+    } else {
+        qDebug() << "No data retrieved from scores table.";
+    }
+}
+
 
 void Test_screen::updateTimer() {
     if (timeRemaining > 0) {
@@ -70,7 +131,7 @@ void Test_screen::updateTimer() {
         ui->timerLabel->setText(timeText);
     } else {
         timer->stop();
-        // Добавьте код для завершения теста или других действий по истечении времени
+
         qDebug() << "Time is up!";
     }
 }
@@ -161,6 +222,8 @@ void Test_screen::loadQuestionsFromDatabase() {
     std::mt19937 g(rd());
     std::shuffle(questionTypes.begin(), questionTypes.end(), g);
 
+    int questionCounter = 1; // Счетчик вопросов
+
     for (const auto &questionType : questionTypes) {
         if (questionType.second) {
             // Open question
@@ -169,11 +232,9 @@ void Test_screen::loadQuestionsFromDatabase() {
 
             QWidget *newWidget = new QWidget();
 
-
-
             QGridLayout *newGridLayout = new QGridLayout(newWidget);
 
-            QLabel *questionLabel = new QLabel(QString("Открытый вопрос %1").arg(openQuestion.id));
+            QLabel *questionLabel = new QLabel(QString("%1.").arg(questionCounter)); // Нумеруем вопросы по порядку
             AutoResizingTextEdit *textEdit = new AutoResizingTextEdit();
             textEdit->setObjectName(QString("openQuestionText_%1").arg(openQuestion.id));
             textEdit->setHtml(openQuestion.question_text);
@@ -201,7 +262,7 @@ void Test_screen::loadQuestionsFromDatabase() {
 
             newGridLayout->setColumnStretch(1, 1);
             newWidget->setLayout(newGridLayout);
-            newWidget->setContentsMargins(0, 0, 0, 40);
+            newWidget->setContentsMargins(0, 0, 0, 100);
 
             ui->verticalLayout->addWidget(newWidget);
 
@@ -214,7 +275,7 @@ void Test_screen::loadQuestionsFromDatabase() {
             QWidget *newWidget = new QWidget();
             QGridLayout *newGridLayout = new QGridLayout(newWidget);
 
-            QLabel *questionLabel = new QLabel(QString("Вопрос %1").arg(question.id));
+            QLabel *questionLabel = new QLabel(QString("%1.").arg(questionCounter)); // Нумеруем вопросы по порядку
             AutoResizingTextEdit *textEdit = new AutoResizingTextEdit();
             textEdit->setObjectName(QString("questionText_%1").arg(question.id));
             textEdit->setHtml(question.question_text);
@@ -262,12 +323,11 @@ void Test_screen::loadQuestionsFromDatabase() {
                 newGridLayout->addLayout(answerLayout, 4 + answerCounter - 1, 0, 1, 3);
 
                 answerCounter++;
-
             }
 
             newGridLayout->setColumnStretch(1, 1);
             newWidget->setLayout(newGridLayout);
-            newWidget->setContentsMargins(0, 0, 0, 40);
+            newWidget->setContentsMargins(0, 0, 0, 100);
 
             ui->verticalLayout->addWidget(newWidget);
 
@@ -285,8 +345,8 @@ void Test_screen::loadQuestionsFromDatabase() {
             }
             questionCheckBoxes[question.id] = checkBoxList;
         }
+        questionCounter++; // Увеличиваем счетчик вопросов
     }
-
 }
 
 
@@ -317,10 +377,13 @@ void Test_screen::checkAnswers() {
     QMap<int, QList<bool>> userAnswers = getUserAnswers();
     QMap<int, QString> userOpenAnswers = getUserOpenAnswers();
 
-    int totalScore = 0;
+    float totalUserScore = 0.0;
+    float maxScore = 0.0;
 
     // Проверка ответов на обычные вопросы
     for (const Question &question : shuffledQuestions) {
+        maxScore += static_cast<float>(question.score);
+
         if (userAnswers.contains(question.id)) {
             const QList<bool> userChecked = userAnswers[question.id];
 
@@ -348,13 +411,13 @@ void Test_screen::checkAnswers() {
                 }
             }
 
-            double scoreFraction = static_cast<double>(correctAnswersCount - incorrectAnswersCount) / totalCorrectAnswers;
-            int questionScore = static_cast<int>(scoreFraction * question.score);
-            if (questionScore < 0) {
-                questionScore = 0;
+            float scoreFraction = static_cast<float>(correctAnswersCount - incorrectAnswersCount) / totalCorrectAnswers;
+            float questionScore = scoreFraction * static_cast<float>(question.score);
+            if (questionScore < float(0.0)) {
+                questionScore = 0.0;
             }
 
-            totalScore += questionScore;
+            totalUserScore += questionScore;
 
             qDebug() << "Question ID:" << question.id << "Partial score:" << questionScore;
         } else {
@@ -364,6 +427,8 @@ void Test_screen::checkAnswers() {
 
     // Проверка ответов на открытые вопросы
     for (const OpenQuestion &openQuestion : shuffledOpenQuestions) {
+        maxScore += static_cast<float>(openQuestion.score);
+
         if (userOpenAnswers.contains(openQuestion.id)) {
             QString userAnswer = userOpenAnswers[openQuestion.id];
             QString correctAnswer = openQuestion.answer_text;
@@ -373,7 +438,7 @@ void Test_screen::checkAnswers() {
             QString correctAnswerPlain = extractPlainTextFromHtml(correctAnswer);
 
             if (userAnswerPlain.trimmed().toLower() == correctAnswerPlain.trimmed().toLower()) {
-                totalScore += openQuestion.score;
+                totalUserScore += static_cast<float>(openQuestion.score);
                 qDebug() << "Open Question ID:" << openQuestion.id << "Answer is correct.";
             } else {
                 qDebug() << "Open Question ID:" << openQuestion.id << "Answer is incorrect.";
@@ -383,7 +448,9 @@ void Test_screen::checkAnswers() {
         }
     }
 
-    qDebug() << "Total Score:" << totalScore;
+    score.insert("totalUserScore", static_cast<float>(totalUserScore));
+    score.insert("maxScore", static_cast<float>(maxScore));
+    qDebug() << "Total Score:" << totalUserScore << "Max Score:" << maxScore;
 }
 
 QString Test_screen::extractPlainTextFromHtml(const QString &htmlText) {
@@ -393,141 +460,3 @@ QString Test_screen::extractPlainTextFromHtml(const QString &htmlText) {
 }
 
 
-
-/*
-
-void Test_screen::loadQuestionsFromDatabase() {
-    QSqlQuery questionQuery("SELECT id, question_text, score FROM questions");
-    while (questionQuery.next()) {
-        int questionId = questionQuery.value(0).toInt();
-        QString questionText = questionQuery.value(1).toString();
-        int score = questionQuery.value(2).toInt(); // Считывание баллов
-
-        QWidget *newWidget = new QWidget();
-        QGridLayout *newGridLayout = new QGridLayout(newWidget);
-
-        QLabel *questionLabel = new QLabel(QString("Вопрос %1").arg(questionId));
-        AutoResizingTextEdit *textEdit = new AutoResizingTextEdit();
-        textEdit->setObjectName(QString("questionText_%1").arg(questionId));
-        textEdit->setHtml(questionText); // Используем setHtml для загрузки HTML
-        textEdit->setTextInteractionFlags(Qt::NoTextInteraction);
-
-        QuestionWidget newQuestion;
-        newQuestion.textEdit = textEdit;
-
-        newGridLayout->addWidget(questionLabel, 0, 0, 1, 2);
-        newGridLayout->addWidget(textEdit, 1, 0, 1, 3);
-
-        // Добавляем поле для ввода баллов
-        QLabel *scoreLabel = new QLabel("Баллы:");
-        QLabel *scoreLineEdit = new QLabel();
-        scoreLineEdit->setText(QString::number(score));
-        scoreLineEdit->setMaximumWidth(30);
-        //scoreLineEdit->setReadOnly(true); // Запретить редактирование текста
-
-        QHBoxLayout *scoreLayout = new QHBoxLayout();
-        scoreLayout->addWidget(scoreLabel);
-        scoreLayout->addWidget(scoreLineEdit);
-
-        newGridLayout->addLayout(scoreLayout, 0, 0, 1, 3,Qt::AlignRight);
-
-        QSqlQuery answerQuery;
-        answerQuery.prepare("SELECT answer_text, is_correct FROM answers WHERE question_id = :question_id");
-        answerQuery.bindValue(":question_id", questionId);
-        answerQuery.exec();
-
-        int answerCounter = 1;
-        while (answerQuery.next()) {
-                    QString answerText = answerQuery.value(0).toString();
-
-                    QCheckBox *checkBox = new QCheckBox();
-                    QLabel *answerTextLabel = new QLabel();
-                    answerTextLabel->setObjectName(QString("answerText_%1_%2").arg(questionId).arg(answerCounter));
-                    answerTextLabel->setText(answerText); // Используем setText
-
-                    AnswerWidget newAnswer;
-                    newAnswer.checkBox = checkBox;
-                    newAnswer.textLabel = answerTextLabel;
-
-                    newQuestion.answers.append(newAnswer);
-
-                    QHBoxLayout *answerLayout = new QHBoxLayout();
-                    answerLayout->addWidget(checkBox);
-                    answerLayout->addWidget(answerTextLabel);
-                    answerLayout->addStretch(); // Добавляем растяжку для выравнивания
-
-                    newGridLayout->addLayout(answerLayout, 4 + answerCounter - 1, 0, 1, 3);
-                    //newGridLayout->addLayout(answerLayout, 4 + answerCounter - 1, 0, 1, 3);
-                    answerCounter++;
-                }
-
-        newGridLayout->setColumnStretch(1, 1);
-        newWidget->setLayout(newGridLayout);
-        newWidget->setContentsMargins(0, 0, 0, 40);
-
-        ui->verticalLayout->addWidget(newWidget);
-
-        newQuestion.scoreLineEdit = nullptr;
-        questions.append(newQuestion);
-    }
-}
-
-
-
-
-
-
-void Test_screen::loadOpenQuestionsFromDatabase(){
-
-    QSqlQuery query("SELECT id, question_text, answer_text, score FROM open_questions");
-    int openQuestionCounter = openQuestions.size() + 1;
-    while (query.next()) {
-        //int questionId = query.value(0).toInt();
-        QString questionText = query.value(1).toString();
-        QString answerText = query.value(2).toString();
-        int score = query.value(3).toInt();
-
-        QWidget *newWidget = new QWidget();
-        QGridLayout *newGridLayout = new QGridLayout(newWidget);
-
-        QLabel *questionLabel = new QLabel(QString("Открытый вопрос %1").arg(openQuestionCounter));
-        AutoResizingTextEdit *questionTextEdit = new AutoResizingTextEdit();
-        questionTextEdit->setObjectName(QString("openQuestionText_%1").arg(openQuestionCounter));
-        questionTextEdit->setHtml(questionText); // Используем setHtml для загрузки HTML
-        questionTextEdit->setTextInteractionFlags(Qt::NoTextInteraction);
-
-        QLabel *answerLabel = new QLabel("Ответ:");
-        AutoResizingTextEdit *answerTextEdit = new AutoResizingTextEdit();
-        answerTextEdit->setObjectName(QString("openAnswerText_%1").arg(openQuestionCounter));
-        answerTextEdit->setHtml(answerText); // Используем setHtml для загрузки HTML
-
-        QLabel *scoreLabel = new QLabel("Баллы:");
-        QLabel *scoreLineEdit = new QLabel();
-
-        scoreLineEdit->setText(QString::number(score));
-        scoreLineEdit->setMaximumWidth(30);
-
-        QHBoxLayout *scoreLayout = new QHBoxLayout();
-        scoreLayout->addWidget(scoreLabel);
-        scoreLayout->addWidget(scoreLineEdit);
-        //scoreLayout->addItem(spacer);
-
-        newGridLayout->addLayout(scoreLayout, 0, 1, 1, 2, Qt::AlignRight);
-
-        newGridLayout->addWidget(questionLabel, 0, 0, 1, 1);
-        newGridLayout->addWidget(questionTextEdit, 1, 0, 1, 3);
-        newGridLayout->addWidget(answerLabel, 4, 0, 1, 1);
-        newGridLayout->addWidget(answerTextEdit, 5, 0, 1, 3);
-
-        ui->verticalLayout->addWidget(newWidget);
-
-        OpenQuestionWidget newOpenQuestion;
-        newOpenQuestion.questionTextEdit = questionTextEdit;
-        newOpenQuestion.answerTextEdit = answerTextEdit;
-        newOpenQuestion.scoreLineEdit = nullptr;
-
-        openQuestions.append(newOpenQuestion);
-        openQuestionCounter++;
-    }
-}
-*/

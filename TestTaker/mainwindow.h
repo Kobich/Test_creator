@@ -20,7 +20,8 @@ public:
 
 private slots:
     void startTest(int timeTest, const QSqlDatabase &db);
-    void showResults();
+    void showResults(QMap<QString, float> score);
+    void takeNewTest();
 
 private:
     Ui::MainWindow *ui;
