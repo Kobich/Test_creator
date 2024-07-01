@@ -131,7 +131,7 @@ void Test_screen::updateTimer() {
         ui->timerLabel->setText(timeText);
     } else {
         timer->stop();
-
+        completeTheTest();
         qDebug() << "Time is up!";
     }
 }
@@ -191,19 +191,10 @@ void Test_screen::readDataFromDatabase(const QSqlDatabase &db) {
 }
 
 void Test_screen::shuffleQuestions() {
-    // Используем текущее время в качестве случайного зерна
     auto seed = static_cast<std::default_random_engine::result_type>(std::chrono::system_clock::now().time_since_epoch().count());
-
-    // Создаем генератор случайных чисел
     std::default_random_engine rng(seed);
-
-    // Перемешиваем вопросы
     std::shuffle(questions.begin(), questions.end(), rng);
-
-    // Перемешиваем открытые вопросы
     std::shuffle(openQuestions.begin(), openQuestions.end(), rng);
-
-    // Копируем перемешанные вопросы в соответствующие списки
     shuffledQuestions = questions;
     shuffledOpenQuestions = openQuestions;
 }

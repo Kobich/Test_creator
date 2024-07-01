@@ -148,7 +148,7 @@
          <item>
           <widget class="QPushButton" name="mainScreenButton">
            <property name="text">
-            <string>PushButton</string>
+            <string>Продолжить</string>
            </property>
           </widget>
          </item>

@@ -31,11 +31,11 @@ struct OpenQuestionWidget {
 
 struct AnswerWidget {
     QCheckBox *checkBox;
-    AutoResizingTextEdit *textEdit; // Используем AutoResizingTextEdit вместо QTextEdit
+    AutoResizingTextEdit *textEdit;
 };
 
 struct QuestionWidget {
-    AutoResizingTextEdit *textEdit; // Используем AutoResizingTextEdit вместо QTextEdit
+    AutoResizingTextEdit *textEdit;
     QList<AnswerWidget> answers;
     QLineEdit* scoreLineEdit;
 };
@@ -77,7 +77,6 @@ private:
     bool insertScores(int questionId, int score3, int score4, int score5); // Метод для вставки оценок
     void removeAnswer(QHBoxLayout *answerLayout, QWidget *parentWidget, int row);
     void removeOpenQuestion(QWidget *questionWidget, int questionIndex);
-    void removeQuestion(QWidget *questionWidget);
     void removeQuestion(QWidget *questionWidget, int questionIndex);
     void saveAllOpenQuestionsToDatabase();
     void saveAllQuestionsToDatabase();

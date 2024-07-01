@@ -410,18 +410,13 @@ void MainWindow::on_actionSaveAs_triggered() {
 }
 
 void MainWindow::removeQuestion(QWidget *questionWidget, int questionIndex) {
-    // Обновление questionIndex для обработки возможного несоответствия
     questionIndex = findQuestionIndex(questionWidget);
 
     if (questionIndex >= 0 && questionIndex < questions.size()) {
-        // Удаление виджетов из интерфейса
         ui->verticalLayout_2->removeWidget(questionWidget);
         questionWidget->deleteLater();
-
-        // Удаление данных из модели
         questions.removeAt(questionIndex);
 
-        // Обновление номеров вопросов и кнопок
         for (int i = questionIndex; i < questions.size(); ++i) {
             QuestionWidget &question = questions[i];
             question.textEdit->parentWidget()->findChild<QLabel*>()->setText(QString("Вопрос %1").arg(i + 1));
@@ -436,7 +431,6 @@ void MainWindow::removeAnswer(QHBoxLayout *answerLayout, QWidget *parentWidget, 
     QGridLayout *gridLayoutParent = qobject_cast<QGridLayout*>(parentWidget->layout());
     if (!gridLayoutParent) return;
 
-    // Удаление виджетов из интерфейса
     while (QLayoutItem* item = answerLayout->takeAt(0)) {
         if (QWidget *widget = item->widget()) {
             widget->deleteLater();
@@ -491,6 +485,7 @@ void MainWindow::on_actionOpen_triggered() {
         clearAllQuestions(); // Добавляем вызов метода для очистки текущих данных
         loadQuestionsFromDatabase();
         loadScoresFromDatabase(); // Загрузка оценок
+        loadOpenQuestionsFromDatabase();
         currentFileName = fileName;
     }
 }
@@ -743,7 +738,7 @@ int score = questionQuery.value(2).toInt(); // Считывание баллов
     newQuestion.scoreLineEdit = scoreLineEdit;
     questions.append(newQuestion);
 }
-loadOpenQuestionsFromDatabase();
+
 }
 
 void MainWindow::loadScoresFromDatabase() {

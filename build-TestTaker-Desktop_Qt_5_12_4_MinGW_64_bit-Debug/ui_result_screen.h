@@ -151,7 +151,7 @@ public:
         endLabel_2->setText(QApplication::translate("Result_screen", "\320\237\321\200\320\265\320\264\320\276\321\201\321\202\320\260\320\262\321\214\321\202\320\265 \321\200\320\265\320\267\321\203\320\273\321\214\321\202\320\260\321\202 \320\277\321\200\320\265\320\277\320\276\320\264\320\260\320\262\320\260\321\202\320\265\320\273\321\216", nullptr));
         finalScoreLabel->setText(QApplication::translate("Result_screen", "\320\230\321\202\320\276\320\263\320\276\320\262\321\213\320\271 \320\261\320\260\320\273\320\273: ", nullptr));
         markLabel->setText(QApplication::translate("Result_screen", "\320\236\321\206\320\265\320\275\320\272\320\260: ", nullptr));
-        mainScreenButton->setText(QApplication::translate("Result_screen", "PushButton", nullptr));
+        mainScreenButton->setText(QApplication::translate("Result_screen", "\320\237\321\200\320\276\320\264\320\276\320\273\320\266\320\270\321\202\321\214", nullptr));
     } // retranslateUi
 
 };
